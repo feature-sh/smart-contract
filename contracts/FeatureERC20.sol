@@ -547,7 +547,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
     // **************************** //
 
     /** @dev Constructs the Recover contract. */
-    function initialize () public initializer {
+    function initialize() public initializer {
         _initializeEIP712("Feature", ERC712_VERSION);
     }
 

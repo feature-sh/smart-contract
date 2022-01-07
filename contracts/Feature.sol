@@ -565,7 +565,7 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
     // **************************** //
 
     /** @dev Constructs the Recover contract. */
-    function initialize () public initializer {
+    function initialize() public initializer {
         _initializeEIP712("Feature", ERC712_VERSION);
     }
 
