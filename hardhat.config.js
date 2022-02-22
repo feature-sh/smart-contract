@@ -4,7 +4,7 @@ require("@nomiclabs/hardhat-etherscan");
 const path = require('path');
 require("dotenv").config({ path: path.join(__dirname, './.env') });
 
-const {INFURA_PROJECT_ID, PRIVATE_KEY_DEPLOYER, ETHERSCAN_API_KEY} = process.env;
+const { INFURA_PROJECT_ID, PRIVATE_KEY_DEPLOYER, MATICVIGIL_API_KEY, ETHERSCAN_API_KEY } = process.env;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
