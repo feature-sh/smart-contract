@@ -31,11 +31,13 @@ module.exports = {
     },
     poa: {
       url: "https://sokol.poa.network/",
-      accounts: [PRIVATE_KEY_DEPLOYER]
+      accounts: [PRIVATE_KEY_DEPLOYER],
+      gasPrice: 8000000000
     },
     matic: {
-      url: "https://rpc-mumbai.maticvigil.com",
-      accounts: [PRIVATE_KEY_DEPLOYER]
+      url: "https://rpc-mumbai.maticvigil.com/v1/bd04dc8055a569085075b4c61fb46b485b4d6ec4",
+      accounts: [PRIVATE_KEY_DEPLOYER],
+      gasPrice: 8000000000
     }
   },
   etherscan: {
