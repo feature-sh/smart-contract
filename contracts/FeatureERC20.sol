@@ -256,8 +256,8 @@ contract ChainConstants {
     uint256 constant public ROOT_CHAIN_ID = 1;
     bytes constant public ROOT_CHAIN_ID_BYTES = hex"01";
 
-    uint256 constant public CHILD_CHAIN_ID = 77;
-    bytes constant public CHILD_CHAIN_ID_BYTES = hex"4D";
+    uint256 constant public CHILD_CHAIN_ID = 5;
+    bytes constant public CHILD_CHAIN_ID_BYTES = hex"05";
 }
 
 
@@ -821,7 +821,6 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
             claim.status = Status.Resolved;
         } else {
-            payable(claim.receiver).send(transaction.deposit);
             payable(claim.challenger).send(claim.challengerFee + transaction.deposit);
 
             claim.status = Status.WaitingForChallenger;

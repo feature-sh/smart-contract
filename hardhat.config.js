@@ -4,7 +4,7 @@ require("@nomiclabs/hardhat-etherscan");
 const path = require('path');
 require("dotenv").config({ path: path.join(__dirname, './.env') });
 
-const {INFURA_PROJECT_ID, PRIVATE_KEY_DEPLOYER, ETHERSCAN_API_KEY} = process.env;
+const { INFURA_PROJECT_ID, PRIVATE_KEY_DEPLOYER, MATICVIGIL_API_KEY, ETHERSCAN_API_KEY } = process.env;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -31,11 +31,13 @@ module.exports = {
     },
     poa: {
       url: "https://sokol.poa.network/",
-      accounts: [PRIVATE_KEY_DEPLOYER]
+      accounts: [PRIVATE_KEY_DEPLOYER],
+      gasPrice: 8000000000
     },
     matic: {
-      url: "https://rpc-mumbai.maticvigil.com",
-      accounts: [PRIVATE_KEY_DEPLOYER]
+      url: `https://rpc-mumbai.maticvigil.com/v1/${MATICVIGIL_API_KEY}`,
+      accounts: [PRIVATE_KEY_DEPLOYER],
+      gasPrice: 8000000000
     }
   },
   etherscan: {
