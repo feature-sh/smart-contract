@@ -35,7 +35,7 @@ module.exports = {
       gasPrice: 8000000000
     },
     matic: {
-      url: "https://rpc-mumbai.maticvigil.com/v1/bd04dc8055a569085075b4c61fb46b485b4d6ec4",
+      url: `https://rpc-mumbai.maticvigil.com/v1/${MATICVIGIL_API_KEY}`,
       accounts: [PRIVATE_KEY_DEPLOYER],
       gasPrice: 8000000000
     }
