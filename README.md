@@ -3,7 +3,7 @@
 ## Getting Started
 
 ```
-cp .env.example .env
+cp .env-sample .env
 npx hardhat test test/feature.js
 npx hardhat test test/feature-erc20.js
 ```
