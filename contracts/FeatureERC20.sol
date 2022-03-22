@@ -26,34 +26,34 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  */
 contract Initializable {
 
-  /**
-   * @dev Indicates that the contract has been initialized.
-   */
-  bool private initialized;
+    /**
+     * @dev Indicates that the contract has been initialized.
+    */
+    bool private initialized;
 
-  /**
-   * @dev Indicates that the contract is in the process of being initialized.
-   */
-  bool private initializing;
+    /**
+     * @dev Indicates that the contract is in the process of being initialized.
+     */
+    bool private initializing;
 
-  /**
-   * @dev Modifier to use in the initializer function of a contract.
-   */
-  modifier initializer() {
-    require(initializing || isConstructor() || !initialized, "Contract instance has already been initialized");
+    /**
+     * @dev Modifier to use in the initializer function of a contract.
+     */
+    modifier initializer() {
+        require(initializing || isConstructor() || !initialized, "Contract instance has already been initialized");
 
-    bool isTopLevelCall = !initializing;
-    if (isTopLevelCall) {
-      initializing = true;
-      initialized = true;
+        bool isTopLevelCall = !initializing;
+        if (isTopLevelCall) {
+            initializing = true;
+            initialized = true;
+        }
+
+        _;
+
+        if (isTopLevelCall) {
+            initializing = false;
+        }
     }
-
-    _;
-
-    if (isTopLevelCall) {
-      initializing = false;
-    }
-  }
 
   /// @dev Returns true if and only if the function is running in the constructor
   function isConstructor() private view returns (bool) {
@@ -484,11 +484,12 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
         address sender;
         Arbitrator arbitrator; // The arbitrator of the contract.
         bytes arbitratorExtraData; // Extra data for the arbitrator.
-        IERC20 token;
+        IERC20 token; // Address of the ERC20 token.
         uint256 amount; // Amount of the reward in Wei.
         uint256 deposit; // Amount of the deposit in Wei.
         uint256 timeoutPayment; // Time in seconds after which the transaction can be executed if not disputed.
-        uint256 delayClaim;
+        uint256 delayClaim; // Time of the challenge period.
+        string metaEvidence; // Link to the meta-evidence.
         uint256 runningClaimCount; // Count of running claims.
         bool isExecuted;
     }
@@ -497,7 +498,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
         uint256 transactionID; // Relation one-to-one with the transaction.
         address receiver; // Address of the receiver.
         address challenger; // Address of the challenger.
-        uint256 timeoutClaim;
+        uint256 timeoutClaim; // Time of the outdated challenge period.
         uint256 lastInteraction; // Last interaction for the dispute procedure.
         uint256 receiverFee; // Total fees paid by the receiver.
         uint256 challengerFee; // Total fees paid by the challenge.
@@ -594,6 +595,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
             deposit: _deposit,
             timeoutPayment: _timeoutPayment + block.timestamp,
             delayClaim: _delayClaim,
+            metaEvidence: _metaEvidence,
             runningClaimCount: 0,
             isExecuted: false
         }));
