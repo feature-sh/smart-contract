@@ -25,20 +25,20 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   solidity: "0.8.7",
   networks: {
-    goerli: {
+    ...(INFURA_PROJECT_ID && PRIVATE_KEY_DEPLOYER && {goerli: {
       url: `https://goerli.infura.io/v3/${INFURA_PROJECT_ID}`,
       accounts: [PRIVATE_KEY_DEPLOYER]
-    },
-    poa: {
+    }}),
+    ...(PRIVATE_KEY_DEPLOYER && {poa: {
       url: "https://sokol.poa.network/",
       accounts: [PRIVATE_KEY_DEPLOYER],
       gasPrice: 8000000000
-    },
-    matic: {
+    }}),
+    ...(MATICVIGIL_API_KEY && PRIVATE_KEY_DEPLOYER && {matic: {
       url: `https://rpc-mumbai.maticvigil.com/v1/${MATICVIGIL_API_KEY}`,
       accounts: [PRIVATE_KEY_DEPLOYER],
       gasPrice: 8000000000
-    }
+    }})
   },
   etherscan: {
     apiKey: ETHERSCAN_API_KEY
