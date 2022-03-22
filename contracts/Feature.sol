@@ -71,10 +71,10 @@ contract Initializable {
         if (isTopLevelCall) {
             initializing = false;
         }
-  }
+}
 
-  /// @dev Returns true if and only if the function is running in the constructor
-  function isConstructor() private view returns (bool) {
+/// @dev Returns true if and only if the function is running in the constructor
+function isConstructor() private view returns (bool) {
         // extcodesize checks the size of the code stored in an address, and
         // address returns the current address. Since the code is still not
         // deployed when running a constructor, any checks on its code size will
@@ -506,7 +506,8 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
         uint256 amount; // Amount of the reward in Wei.
         uint256 deposit; // Amount of the deposit in Wei.
         uint256 timeoutPayment; // Time in seconds after which the transaction can be executed if not disputed.
-        uint256 delayClaim;
+        uint256 delayClaim; // Time of the challenge period.
+        string metaEvidence; // Link to the meta-evidence.
         uint256 runningClaimCount; // Count of running claims.
         bool isExecuted;
     }
@@ -515,7 +516,7 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
         uint256 transactionID; // Relation one-to-one with the transaction.
         address receiver; // Address of the receiver.
         address challenger; // Address of the challenger.
-        uint256 timeoutClaim;
+        uint256 timeoutClaim; // Time of the outdated challenge period.
         uint256 lastInteraction; // Last interaction for the dispute procedure.
         uint256 receiverFee; // Total fees paid by the receiver.
         uint256 challengerFee; // Total fees paid by the challenge.
@@ -604,6 +605,7 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
             deposit: _deposit,
             timeoutPayment: _timeoutPayment + block.timestamp,
             delayClaim: _delayClaim,
+            metaEvidence: _metaEvidence,
             runningClaimCount: 0,
             isExecuted: false
         }));
