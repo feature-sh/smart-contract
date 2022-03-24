@@ -58,10 +58,7 @@ contract Initializable {
      * @dev Modifier to use in the initializer function of a contract.
      */
     modifier initializer() {
-        require(
-            initializing || isConstructor() || !initialized,
-            "Contract instance has already been initialized"
-        );
+        require(initializing || isConstructor() || !initialized, "Contract instance has already been initialized");
 
         bool isTopLevelCall = !initializing;
         if (isTopLevelCall) {
@@ -93,7 +90,7 @@ contract Initializable {
     }
 
     // Reserved storage space to allow for layout changes in the future.
-    uint[50] private ______gap;
+    uint256[50] private ______gap;
 }
 
 contract EIP712Base is Initializable {
@@ -105,26 +102,17 @@ contract EIP712Base is Initializable {
     }
 
     bytes32 internal constant EIP712_DOMAIN_TYPEHASH =
-        keccak256(
-            bytes(
-                "EIP712Domain(string name,string version,address verifyingContract,bytes32 salt)"
-            )
-        );
+        keccak256(bytes("EIP712Domain(string name,string version,address verifyingContract,bytes32 salt)"));
     bytes32 internal domainSeperator;
 
     // supposed to be called once while initializing.
     // one of the contractsa that inherits this contract follows proxy pattern
     // so it is not possible to do this in a constructor
-    function _initializeEIP712(string memory name, string memory version)
-        internal
-        initializer
-    {
+    function _initializeEIP712(string memory name, string memory version) internal initializer {
         _setDomainSeperator(name, version);
     }
 
-    function _setDomainSeperator(string memory name, string memory version)
-        internal
-    {
+    function _setDomainSeperator(string memory name, string memory version) internal {
         domainSeperator = keccak256(
             abi.encode(
                 EIP712_DOMAIN_TYPEHASH,
@@ -140,7 +128,7 @@ contract EIP712Base is Initializable {
         return domainSeperator;
     }
 
-    function getChainId() public view returns (uint) {
+    function getChainId() public view returns (uint256) {
         uint256 id;
         assembly {
             id := chainid()
@@ -155,33 +143,18 @@ contract EIP712Base is Initializable {
      * "\\x19" makes the encoding deterministic
      * "\\x01" is the version byte to make it compatible to EIP-191
      */
-    function toTypedMessageHash(bytes32 messageHash)
-        internal
-        view
-        returns (bytes32)
-    {
-        return
-            keccak256(
-                abi.encodePacked("\x19\x01", getDomainSeperator(), messageHash)
-            );
+    function toTypedMessageHash(bytes32 messageHash) internal view returns (bytes32) {
+        return keccak256(abi.encodePacked("\x19\x01", getDomainSeperator(), messageHash));
     }
 }
 
 contract NativeMetaTransaction is EIP712Base {
     bytes32 private constant META_TRANSACTION_TYPEHASH =
-        keccak256(
-            bytes(
-                "MetaTransaction(uint256 nonce,address from,bytes functionSignature)"
-            )
-        );
+        keccak256(bytes("MetaTransaction(uint256 nonce,address from,bytes functionSignature)"));
 
-    event MetaTransactionExecuted(
-        address userAddress,
-        address relayerAddress,
-        bytes functionSignature
-    );
+    event MetaTransactionExecuted(address userAddress, address relayerAddress, bytes functionSignature);
 
-    mapping(address => uint) nonces;
+    mapping(address => uint256) nonces;
 
     /*
      * Meta transaction structure.
@@ -207,10 +180,7 @@ contract NativeMetaTransaction is EIP712Base {
             functionSignature: functionSignature
         });
 
-        require(
-            verify(userAddress, metaTx, sigR, sigS, sigV),
-            "Signer and signature do not match"
-        );
+        require(verify(userAddress, metaTx, sigR, sigS, sigV), "Signer and signature do not match");
 
         // increase nonce for user (to avoid re-use)
         uint256 noncesByUser = nonces[userAddress];
@@ -219,35 +189,20 @@ contract NativeMetaTransaction is EIP712Base {
 
         nonces[userAddress] = noncesByUser + 1;
 
-        emit MetaTransactionExecuted(
-            userAddress,
-            msg.sender,
-            functionSignature
-        );
+        emit MetaTransactionExecuted(userAddress, msg.sender, functionSignature);
 
         // Append userAddress and relayer address at the end to extract it from calling context
-        (bool success, bytes memory returnData) = address(this).call(
-            abi.encodePacked(functionSignature, userAddress)
-        );
+        (bool success, bytes memory returnData) = address(this).call(abi.encodePacked(functionSignature, userAddress));
 
         require(success, "Function call not successful");
 
         return returnData;
     }
 
-    function hashMetaTransaction(MetaTransaction memory metaTx)
-        internal
-        pure
-        returns (bytes32)
-    {
+    function hashMetaTransaction(MetaTransaction memory metaTx) internal pure returns (bytes32) {
         return
             keccak256(
-                abi.encode(
-                    META_TRANSACTION_TYPEHASH,
-                    metaTx.nonce,
-                    metaTx.from,
-                    keccak256(metaTx.functionSignature)
-                )
+                abi.encode(META_TRANSACTION_TYPEHASH, metaTx.nonce, metaTx.from, keccak256(metaTx.functionSignature))
             );
     }
 
@@ -263,14 +218,7 @@ contract NativeMetaTransaction is EIP712Base {
         uint8 sigV
     ) internal view returns (bool) {
         require(signer != address(0), "NativeMetaTransaction: INVALID_SIGNER");
-        return
-            signer ==
-            ecrecover(
-                toTypedMessageHash(hashMetaTransaction(metaTx)),
-                sigV,
-                sigR,
-                sigS
-            );
+        return signer == ecrecover(toTypedMessageHash(hashMetaTransaction(metaTx)), sigV, sigR, sigS);
     }
 }
 
@@ -291,10 +239,7 @@ abstract contract ContextMixin {
             uint256 index = msg.data.length;
             assembly {
                 // Load the 32 bytes word from memory with the address on the lower 20 bytes, and mask those.
-                sender := and(
-                    mload(add(array, index)),
-                    0xffffffffffffffffffffffffffffffffffffffff
-                )
+                sender := and(mload(add(array, index)), 0xffffffffffffffffffffffffffffffffffffffff)
             }
         } else {
             sender = msg.sender;
@@ -350,11 +295,7 @@ interface IArbitrable {
      *  @param _disputeID ID of the dispute in the Arbitrator contract.
      *  @param _ruling The ruling which was given.
      */
-    event Ruling(
-        Arbitrator indexed _arbitrator,
-        uint256 indexed _disputeID,
-        uint256 _ruling
-    );
+    event Ruling(Arbitrator indexed _arbitrator, uint256 indexed _disputeID, uint256 _ruling);
 
     /** @dev Give a ruling for a dispute. Must be called by the arbitrator.
      *  The purpose of this function is to ensure that the address calling it has the right to rule on the contract.
@@ -377,10 +318,7 @@ abstract contract Arbitrable is IArbitrable {
     bytes public arbitratorExtraData; // Extra data to require particular dispute and appeal behaviour.
 
     modifier onlyArbitrator() {
-        require(
-            msg.sender == address(arbitrator),
-            "Can only be called by the arbitrator."
-        );
+        require(msg.sender == address(arbitrator), "Can only be called by the arbitrator.");
         _;
     }
 
@@ -398,11 +336,7 @@ abstract contract Arbitrable is IArbitrable {
      *  @param _disputeID ID of the dispute in the Arbitrator contract.
      *  @param _ruling Ruling given by the arbitrator. Note that 0 is reserved for "Not able/wanting to make a decision".
      */
-    function rule(uint256 _disputeID, uint256 _ruling)
-        external
-        override
-        onlyArbitrator
-    {
+    function rule(uint256 _disputeID, uint256 _ruling) external override onlyArbitrator {
         emit Ruling(Arbitrator(msg.sender), _disputeID, _ruling);
 
         executeRuling(_disputeID, _ruling);
@@ -412,9 +346,7 @@ abstract contract Arbitrable is IArbitrable {
      *  @param _disputeID ID of the dispute in the Arbitrator contract.
      *  @param _ruling Ruling given by the arbitrator. Note that 0 is reserved for "Not able/wanting to make a decision".
      */
-    function executeRuling(uint256 _disputeID, uint256 _ruling)
-        internal
-        virtual;
+    function executeRuling(uint256 _disputeID, uint256 _ruling) internal virtual;
 }
 
 /** @title Arbitrator
@@ -432,18 +364,12 @@ abstract contract Arbitrator {
     }
 
     modifier requireArbitrationFee(bytes calldata _extraData) {
-        require(
-            msg.value >= arbitrationCost(_extraData),
-            "Not enough ETH to cover arbitration costs."
-        );
+        require(msg.value >= arbitrationCost(_extraData), "Not enough ETH to cover arbitration costs.");
         _;
     }
 
     modifier requireAppealFee(uint256 _disputeID, bytes calldata _extraData) {
-        require(
-            msg.value >= appealCost(_disputeID, _extraData),
-            "Not enough ETH to cover appeal costs."
-        );
+        require(msg.value >= appealCost(_disputeID, _extraData), "Not enough ETH to cover appeal costs.");
         _;
     }
 
@@ -451,27 +377,18 @@ abstract contract Arbitrator {
      *  @param _disputeID ID of the dispute.
      *  @param _arbitrable The contract which created the dispute.
      */
-    event DisputeCreation(
-        uint256 indexed _disputeID,
-        Arbitrable indexed _arbitrable
-    );
+    event DisputeCreation(uint256 indexed _disputeID, Arbitrable indexed _arbitrable);
 
     /** @dev To be raised when a dispute can be appealed.
      *  @param _disputeID ID of the dispute.
      */
-    event AppealPossible(
-        uint256 indexed _disputeID,
-        Arbitrable indexed _arbitrable
-    );
+    event AppealPossible(uint256 indexed _disputeID, Arbitrable indexed _arbitrable);
 
     /** @dev To be raised when the current ruling is appealed.
      *  @param _disputeID ID of the dispute.
      *  @param _arbitrable The contract which created the dispute.
      */
-    event AppealDecision(
-        uint256 indexed _disputeID,
-        Arbitrable indexed _arbitrable
-    );
+    event AppealDecision(uint256 indexed _disputeID, Arbitrable indexed _arbitrable);
 
     /** @dev Create a dispute. Must be called by the arbitrable contract.
      *  Must be paid at least arbitrationCost(_extraData).
@@ -490,11 +407,7 @@ abstract contract Arbitrator {
      *  @param _extraData Can be used to give additional info on the dispute to be created.
      *  @return fee Amount to be paid.
      */
-    function arbitrationCost(bytes calldata _extraData)
-        public
-        view
-        virtual
-        returns (uint256 fee);
+    function arbitrationCost(bytes calldata _extraData) public view virtual returns (uint256 fee);
 
     /** @dev Appeal a ruling. Note that it has to be called before the arbitrator contract calls rule.
      *  @param _disputeID ID of the dispute to be appealed.
@@ -513,55 +426,32 @@ abstract contract Arbitrator {
      *  @param _extraData Can be used to give additional info on the dispute to be created.
      *  @return fee Amount to be paid.
      */
-    function appealCost(uint256 _disputeID, bytes calldata _extraData)
-        public
-        view
-        virtual
-        returns (uint256 fee);
+    function appealCost(uint256 _disputeID, bytes calldata _extraData) public view virtual returns (uint256 fee);
 
     /** @dev Compute the start and end of the dispute's current or next appeal period, if possible.
      *  @param _disputeID ID of the dispute.
      *  @return start The start of the period.
      *  @return end The end of the period.
      */
-    function appealPeriod(uint256 _disputeID)
-        public
-        view
-        virtual
-        returns (uint256 start, uint256 end)
-    {}
+    function appealPeriod(uint256 _disputeID) public view virtual returns (uint256 start, uint256 end) {}
 
     /** @dev Return the status of a dispute.
      *  @param _disputeID ID of the dispute to rule.
      *  @return status The status of the dispute.
      */
-    function disputeStatus(uint256 _disputeID)
-        public
-        view
-        virtual
-        returns (DisputeStatus status);
+    function disputeStatus(uint256 _disputeID) public view virtual returns (DisputeStatus status);
 
     /** @dev Return the current ruling of a dispute. This is useful for parties to know if they should appeal.
      *  @param _disputeID ID of the dispute.
      *  @return ruling The ruling which has been given or the one which will be given if there is no appeal.
      */
-    function currentRuling(uint256 _disputeID)
-        public
-        view
-        virtual
-        returns (uint256 ruling);
+    function currentRuling(uint256 _disputeID) public view virtual returns (uint256 ruling);
 }
 
 /** @title Feature
  *  Freelancing service smart contract
  */
-contract Feature is
-    Initializable,
-    NativeMetaTransaction,
-    ChainConstants,
-    ContextMixin,
-    IArbitrable
-{
+contract Feature is Initializable, NativeMetaTransaction, ChainConstants, ContextMixin, IArbitrable {
     // **************************** //
     // *    Contract variables    * //
     // **************************** //
@@ -615,7 +505,7 @@ contract Feature is
     Transaction[] public transactions;
     Claim[] public claims;
 
-    mapping(uint256 => uint) public disputeIDtoClaimID; // One-to-one relationship between the dispute and the claim.
+    mapping(uint256 => uint256) public disputeIDtoClaimID; // One-to-one relationship between the dispute and the claim.
 
     // **************************** //
     // *          Events          * //
@@ -626,33 +516,21 @@ contract Feature is
      *  @param _amount The amount paid.
      *  @param _receiver the receiver of the transaction amount.
      */
-    event Payment(
-        uint256 indexed _transactionID,
-        uint256 _amount,
-        address _receiver
-    );
+    event Payment(uint256 indexed _transactionID, uint256 _amount, address _receiver);
 
     /** @dev To be emitted when a sender is refunded.
      *  @param _transactionID The index of the transaction.
      *  @param _amount The amount paid.
      *  @param _party The party that paid.
      */
-    event Refund(
-        uint256 indexed _transactionID,
-        uint256 _amount,
-        address _party
-    );
+    event Refund(uint256 indexed _transactionID, uint256 _amount, address _party);
 
     /** @dev To be emitted when a receiver submit a claim.
      *  @param _transactionID The index of the transaction.
      *  @param _claimID The index of the claim.
      *  @param _receiver The receiver who claims.
      */
-    event ClaimSubmit(
-        uint256 indexed _transactionID,
-        uint256 _claimID,
-        address _receiver
-    );
+    event ClaimSubmit(uint256 indexed _transactionID, uint256 _claimID, address _receiver);
 
     /** @dev Indicate that a party has to pay a fee or would otherwise be considered as losing.
      *  @param _transactionID The index of the transaction.
@@ -718,11 +596,7 @@ contract Feature is
      *  @param _transactionID The index of the transaction.
      *  @return claimID The index of the claim.
      */
-    function claim(uint256 _transactionID)
-        public
-        payable
-        returns (uint256 claimID)
-    {
+    function claim(uint256 _transactionID) public payable returns (uint256 claimID) {
         return _claimFor(_transactionID, _msgSender());
     }
 
@@ -731,11 +605,7 @@ contract Feature is
      *  @param _receiver The address of the receiver.
      *  @return claimID The index of the claim.
      */
-    function claimFor(uint256 _transactionID, address _receiver)
-        public
-        payable
-        returns (uint256 claimID)
-    {
+    function claimFor(uint256 _transactionID, address _receiver) public payable returns (uint256 claimID) {
         return _claimFor(_transactionID, _receiver);
     }
 
@@ -744,15 +614,10 @@ contract Feature is
      *  @param _receiver The address of the receiver.
      *  @return claimID The index of the claim.
      */
-    function _claimFor(uint256 _transactionID, address _receiver)
-        internal
-        returns (uint256 claimID)
-    {
+    function _claimFor(uint256 _transactionID, address _receiver) internal returns (uint256 claimID) {
         Transaction storage transaction = transactions[_transactionID];
 
-        uint256 arbitrationCost = transaction.arbitrator.arbitrationCost(
-            transaction.arbitratorExtraData
-        );
+        uint256 arbitrationCost = transaction.arbitrator.arbitrationCost(transaction.arbitratorExtraData);
 
         require(
             msg.value >= transaction.deposit + arbitrationCost,
@@ -789,25 +654,14 @@ contract Feature is
         Claim storage claim = claims[_claimID];
         Transaction storage transaction = transactions[claim.transactionID];
 
-        require(
-            transaction.isExecuted == false,
-            "The transaction should not be executed."
-        );
-        require(
-            claim.timeoutClaim <= block.timestamp,
-            "The timeout claim should be passed."
-        );
-        require(
-            claim.status == Status.WaitingForChallenger,
-            "The transaction shouldn't be disputed."
-        );
+        require(transaction.isExecuted == false, "The transaction should not be executed.");
+        require(claim.timeoutClaim <= block.timestamp, "The timeout claim should be passed.");
+        require(claim.status == Status.WaitingForChallenger, "The transaction shouldn't be disputed.");
 
         transaction.isExecuted = true;
         claim.status = Status.Resolved;
 
-        payable(claim.receiver).transfer(
-            transaction.amount + transaction.deposit + claim.receiverFee
-        );
+        payable(claim.receiver).transfer(transaction.amount + transaction.deposit + claim.receiverFee);
 
         emit Payment(claim.transactionID, transaction.amount, claim.receiver);
     }
@@ -819,18 +673,9 @@ contract Feature is
     function refund(uint256 _transactionID) public {
         Transaction storage transaction = transactions[_transactionID];
 
-        require(
-            transaction.isExecuted == false,
-            "The transaction should not be refunded."
-        );
-        require(
-            transaction.timeoutPayment <= block.timestamp,
-            "The timeout payment should be passed."
-        );
-        require(
-            transaction.runningClaimCount == 0,
-            "The transaction should not to have running claims."
-        );
+        require(transaction.isExecuted == false, "The transaction should not be refunded.");
+        require(transaction.timeoutPayment <= block.timestamp, "The timeout payment should be passed.");
+        require(transaction.runningClaimCount == 0, "The transaction should not to have running claims.");
 
         transaction.isExecuted = true;
 
@@ -848,9 +693,7 @@ contract Feature is
         Claim storage claim = claims[_claimID];
         Transaction storage transaction = transactions[claim.transactionID];
 
-        uint256 arbitrationCost = transaction.arbitrator.arbitrationCost(
-            transaction.arbitratorExtraData
-        );
+        uint256 arbitrationCost = transaction.arbitrator.arbitrationCost(transaction.arbitratorExtraData);
 
         require(
             claim.status < Status.DisputeCreated,
@@ -876,17 +719,13 @@ contract Feature is
         Transaction storage transaction = transactions[claim.transactionID];
 
         claim.status = Status.DisputeCreated;
-        claim.disputeID = transaction.arbitrator.createDispute{
-            value: _arbitrationCost
-        }(AMOUNT_OF_CHOICES, transaction.arbitratorExtraData);
+        claim.disputeID = transaction.arbitrator.createDispute{value: _arbitrationCost}(
+            AMOUNT_OF_CHOICES,
+            transaction.arbitratorExtraData
+        );
         disputeIDtoClaimID[claim.disputeID] = _claimID;
 
-        emit Dispute(
-            transaction.arbitrator,
-            claim.disputeID,
-            _claimID,
-            _claimID
-        );
+        emit Dispute(transaction.arbitrator, claim.disputeID, _claimID, _claimID);
 
         // Refund receiver if it overpaid.
         if (claim.receiverFee > _arbitrationCost) {
@@ -913,17 +752,9 @@ contract Feature is
         Claim storage claim = claims[_claimID];
         Transaction storage transaction = transactions[claim.transactionID];
 
-        require(
-            claim.status < Status.Resolved,
-            "Must not send evidence if the dispute is resolved."
-        );
+        require(claim.status < Status.Resolved, "Must not send evidence if the dispute is resolved.");
 
-        emit Evidence(
-            transaction.arbitrator,
-            _claimID,
-            _msgSender(),
-            _evidence
-        );
+        emit Evidence(transaction.arbitrator, _claimID, _msgSender(), _evidence);
     }
 
     /** @dev Appeal an appealable ruling.
@@ -935,10 +766,7 @@ contract Feature is
         Claim storage claim = claims[_claimID];
         Transaction storage transaction = transactions[claim.transactionID];
 
-        transaction.arbitrator.appeal{value: msg.value}(
-            claim.disputeID,
-            transaction.arbitratorExtraData
-        );
+        transaction.arbitrator.appeal{value: msg.value}(claim.disputeID, transaction.arbitratorExtraData);
     }
 
     /** @dev Give a ruling for a dispute. Must be called by the arbitrator.
@@ -951,14 +779,8 @@ contract Feature is
         Claim storage claim = claims[claimID];
         Transaction storage transaction = transactions[claim.transactionID];
 
-        require(
-            msg.sender == address(transaction.arbitrator),
-            "The caller must be the arbitrator."
-        );
-        require(
-            claim.status == Status.DisputeCreated,
-            "The dispute has already been resolved."
-        );
+        require(msg.sender == address(transaction.arbitrator), "The caller must be the arbitrator.");
+        require(claim.status == Status.DisputeCreated, "The dispute has already been resolved.");
 
         emit Ruling(Arbitrator(msg.sender), _disputeID, _ruling);
 
@@ -977,20 +799,16 @@ contract Feature is
 
         // Give the arbitration fee back.
         // Note: we use send to prevent a party from blocking the execution.
-        if (_ruling == uint(RulingOptions.ReceiverWins)) {
+        if (_ruling == uint256(RulingOptions.ReceiverWins)) {
             payable(claim.receiver).send(transaction.deposit);
 
             claim.status = Status.WaitingForChallenger;
-        } else if (_ruling == uint(RulingOptions.ChallengerWins)) {
-            payable(claim.challenger).send(
-                claim.challengerFee + transaction.deposit * 2
-            );
+        } else if (_ruling == uint256(RulingOptions.ChallengerWins)) {
+            payable(claim.challenger).send(claim.challengerFee + transaction.deposit * 2);
 
             claim.status = Status.Resolved;
         } else {
-            payable(claim.challenger).send(
-                claim.challengerFee + transaction.deposit
-            );
+            payable(claim.challenger).send(claim.challengerFee + transaction.deposit);
 
             claim.status = Status.WaitingForChallenger;
         }
@@ -1005,11 +823,7 @@ contract Feature is
     /** @dev Getter to know the count of transactions.
      *  @return countTransactions The count of transactions.
      */
-    function getCountTransactions()
-        public
-        view
-        returns (uint256 countTransactions)
-    {
+    function getCountTransactions() public view returns (uint256 countTransactions) {
         return transactions.length;
     }
 
@@ -1019,18 +833,14 @@ contract Feature is
      *  @param _address The specified address.
      *  @return transactionIDs The transaction IDs.
      */
-    function getTransactionIDsByAddress(address _address)
-        public
-        view
-        returns (uint[] memory transactionIDs)
-    {
+    function getTransactionIDsByAddress(address _address) public view returns (uint256[] memory transactionIDs) {
         uint256 count = 0;
 
         for (uint256 i = 0; i < transactions.length; i++) {
             if (transactions[i].sender == _address) count++;
         }
 
-        transactionIDs = new uint[](count);
+        transactionIDs = new uint256[](count);
 
         count = 0;
 
@@ -1045,18 +855,14 @@ contract Feature is
      *  @param _address The specified address.
      *  @return claimIDs The claims IDs.
      */
-    function getClaimIDsByAddress(address _address)
-        public
-        view
-        returns (uint[] memory claimIDs)
-    {
+    function getClaimIDsByAddress(address _address) public view returns (uint256[] memory claimIDs) {
         uint256 count = 0;
 
         for (uint256 i = 0; i < claims.length; i++) {
             if (claims[i].receiver == _address) count++;
         }
 
-        claimIDs = new uint[](count);
+        claimIDs = new uint256[](count);
 
         count = 0;
 

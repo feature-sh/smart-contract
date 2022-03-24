@@ -3,7 +3,7 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
+const hre = require('hardhat');
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -14,12 +14,20 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const CentralizedArbitrator = await hre.ethers.getContractFactory("CentralizedAppealableArbitrator");
-  const centralizedArbitrator = await CentralizedArbitrator.deploy("20000000000000000", "42");
+  const CentralizedArbitrator = await hre.ethers.getContractFactory(
+    'CentralizedAppealableArbitrator',
+  );
+  const centralizedArbitrator = await CentralizedArbitrator.deploy(
+    '20000000000000000',
+    '42',
+  );
 
   await centralizedArbitrator.deployed();
 
-  console.log("CentralizedAppealableArbitrator deployed to:", centralizedArbitrator.address);
+  console.log(
+    'CentralizedAppealableArbitrator deployed to:',
+    centralizedArbitrator.address,
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere
