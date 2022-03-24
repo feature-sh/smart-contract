@@ -1,11 +1,11 @@
 {
-    "overrides": [
-      {
-        "files": "*.sol",
-        "options": {
-          "tabWidth": 4,
-          "explicitTypes": "preserve"
-        }
+  "overrides": [
+    {
+      "files": "*.sol",
+      "options": {
+        "tabWidth": 4,
+        "explicitTypes": "preserve"
       }
-    ]
-  }
+    }
+  ]
+}
