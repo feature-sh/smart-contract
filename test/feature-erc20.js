@@ -595,5 +595,37 @@ describe('Feature ERC20', function () {
       '259200', // _timeoutClaim => 3 days
       '', // _metaEvidence
     );
+
+    // Claim
+    const claimTx = await contractAsSignerReceiver5.claim(
+      0, // _transactionID
+      {
+        value: '120000000000000000', // 0.12eth
+        gasPrice: 150000000000,
+      },
+    );
+
+    // wait until the transaction is mined
+    const transactionMinedClaimTx = await claimTx.wait();
+
+    const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
+      .valueOf()
+      .mul(150000000000);
+
+    // Challenge claim
+    const challengeClaimTx = await contractAsSignerChallenger1.challengeClaim(
+      0, // _claimID
+      {
+        value: '120000000000000000', // 0.12eth
+        gasPrice: 150000000000,
+      },
+    );
+
+    // wait until the transaction is mined
+    const transactionMinedChallengeClaimTx = await challengeClaimTx.wait();
+
+    const gasFeeChallengeClaimTx = transactionMinedChallengeClaimTx.gasUsed
+      .valueOf()
+      .mul(150000000000);
   })
 });
