@@ -628,5 +628,13 @@ describe('Feature ERC20', function () {
       0, // _disputeID
       1, // Ruling for the receiver
     );
-  })
+
+    const newBalanceReceiver7Expected = new ethers.BigNumber.from(
+      '10000000000000000000000',
+    )
+
+    expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
+      newBalanceReceiver7Expected.toString(),
+    );
+  });
 });
