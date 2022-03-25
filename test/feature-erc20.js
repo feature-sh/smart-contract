@@ -569,6 +569,31 @@ describe('Feature ERC20', function () {
     );
   });
 
+  // Scenario: 2 claimers, the first one get the reward.
   it('Should give the amount of the first claimer who claim in multiple successful claims', async function () {
+    const createTransferTx = await contractAsSignerERC20Deployer.transfer(
+      sender7.address,
+      100,
+    );
+
+    await createTransferTx.wait();
+
+    const createAllowERC20Tx = await contractAsSender7ERC20Deployer.approve(
+      featureERC20.address,
+      100,
+    );
+
+    await createAllowERC20Tx.wait();
+
+    const createTransactionTx = await contractAsSignerSender7.createTransaction(
+      arbitrator.address,
+      0x00,
+      erc20Mock.address,
+      100,
+      '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
+      '864000', // _timeoutPayment => 10 days
+      '259200', // _timeoutClaim => 3 days
+      '', // _metaEvidence
+    );
   })
 });
