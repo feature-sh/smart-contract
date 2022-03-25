@@ -19,7 +19,9 @@ let deployer,
   challenger1,
   sender6,
   receiver6,
-  challenger2;
+  challenger2,
+  sender7,
+  receiver7;
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -49,6 +51,8 @@ beforeEach(async function () {
     sender6,
     receiver6,
     challenger2,
+    sender7,
+    receiver7
   ] = await ethers.getSigners();
 
   featureERC20 = await FeatureERC20.deploy();
@@ -67,6 +71,7 @@ beforeEach(async function () {
   contractAsSender4ERC20Deployer = erc20Mock.connect(sender4);
   contractAsSender5ERC20Deployer = erc20Mock.connect(sender5);
   contractAsSender6ERC20Deployer = erc20Mock.connect(sender6);
+  contractAsSender7ERC20Deployer = erc20Mock.connect(sender7);
 
   contractAsSignerDeployer = featureERC20.connect(deployer);
   contractAsSignerSender0 = featureERC20.connect(sender0);
@@ -86,6 +91,8 @@ beforeEach(async function () {
   contractAsSignerSender6 = featureERC20.connect(sender6);
   contractAsSignerReceiver6 = featureERC20.connect(receiver6);
   contractAsSignerChallenger2 = featureERC20.connect(challenger2);
+  contractAsSignerSender7 = featureERC20.connect(sender7);
+  contractAsSignerReceiver7 = featureERC20.connect(receiver7);
 
   contractAsSignerJuror = arbitrator.connect(deployer);
 
@@ -561,4 +568,7 @@ describe('Feature ERC20', function () {
       newBalanceReceiver6Expected.toString(),
     );
   });
+
+  it('Should give the amount of the first claimer who claim in multiple successful claims', async function () {
+  })
 });
