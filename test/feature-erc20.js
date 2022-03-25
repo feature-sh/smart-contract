@@ -621,11 +621,12 @@ describe('Feature ERC20', function () {
       },
     );
 
-    // wait until the transaction is mined
-    const transactionMinedChallengeClaimTx = await challengeClaimTx.wait();
+    await challengeClaimTx.wait();
 
-    const gasFeeChallengeClaimTx = transactionMinedChallengeClaimTx.gasUsed
-      .valueOf()
-      .mul(150000000000);
+    // Execute ruling
+    await contractAsSignerJuror.giveRuling(
+      0, // _disputeID
+      1, // Ruling for the receiver
+    );
   })
 });
