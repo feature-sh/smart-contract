@@ -120,7 +120,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
@@ -186,7 +186,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
@@ -230,7 +230,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
@@ -278,7 +278,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
@@ -326,7 +326,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
@@ -412,7 +412,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
@@ -489,7 +489,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
@@ -592,7 +592,7 @@ describe('Feature ERC20', function () {
       100,
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
-      '259200', // challengePeriod => 3 days
+      '259200', // _challengePeriod => 3 days
       '', // _metaEvidence
     );
 
