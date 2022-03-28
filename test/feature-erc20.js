@@ -591,7 +591,7 @@ describe('Feature ERC20', function () {
 
     await createAllowERC20Tx.wait();
 
-    const createTransactionTx = await contractAsSignerSender7.createTransaction(
+    const createTransactionTx1 = await contractAsSignerSender7.createTransaction(
       arbitrator.address,
       0x00,
       erc20Mock.address,
@@ -602,8 +602,9 @@ describe('Feature ERC20', function () {
       '', // _metaEvidence
     );
 
-    // Claim
-    const claimTx = await contractAsSignerReceiver5.claim(
+
+    // 1st claim
+    const claimTx1 = await contractAsSignerReceiver7.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -612,11 +613,29 @@ describe('Feature ERC20', function () {
     );
 
     // wait until the transaction is mined
-    const transactionMinedClaimTx = await claimTx.wait();
+    const transactionMinedClaimTx1 = await claimTx1.wait();
 
-    const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
+    const gasFeeClaimTx1 = transactionMinedClaimTx1.gasUsed
       .valueOf()
       .mul(150000000000);
+
+
+    // 2nd claim
+    const claimTx2 = await contractAsSignerReceiver8.claim(
+      0, // _transactionID
+      {
+        value: '120000000000000000', // 0.12eth
+        gasPrice: 150000000000,
+      },
+    );
+
+    // wait until the transaction is mined
+    const transactionMinedClaimTx2 = await claimTx2.wait();
+
+    const gasFeeClaimTx2 = transactionMinedClaimTx2.gasUsed
+      .valueOf()
+      .mul(150000000000);
+
 
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
       '10000000000000000000000',
