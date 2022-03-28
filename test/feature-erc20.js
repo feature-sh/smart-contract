@@ -618,23 +618,6 @@ describe('Feature ERC20', function () {
       .valueOf()
       .mul(150000000000);
 
-    // Challenge claim
-    const challengeClaimTx = await contractAsSignerChallenger1.challengeClaim(
-      0, // _claimID
-      {
-        value: '120000000000000000', // 0.12eth
-        gasPrice: 150000000000,
-      },
-    );
-
-    await challengeClaimTx.wait();
-
-    // Execute ruling
-    await contractAsSignerJuror.giveRuling(
-      0, // _disputeID
-      1, // Ruling for the receiver
-    );
-
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
       '10000000000000000000000',
     )
