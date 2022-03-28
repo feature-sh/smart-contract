@@ -19,9 +19,10 @@ let deployer,
   challenger1,
   sender6,
   receiver6,
-  challenger2,
   sender7,
-  receiver7;
+  receiver7,
+  sender8,
+  receiver8;
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -52,7 +53,9 @@ beforeEach(async function () {
     receiver6,
     challenger2,
     sender7,
-    receiver7
+    receiver7,
+    sender8,
+    receiver8
   ] = await ethers.getSigners();
 
   featureERC20 = await FeatureERC20.deploy();
@@ -72,6 +75,7 @@ beforeEach(async function () {
   contractAsSender5ERC20Deployer = erc20Mock.connect(sender5);
   contractAsSender6ERC20Deployer = erc20Mock.connect(sender6);
   contractAsSender7ERC20Deployer = erc20Mock.connect(sender7);
+  contractAsSender8ERC20Deployer = erc20Mock.connect(sender8);
 
   contractAsSignerDeployer = featureERC20.connect(deployer);
   contractAsSignerSender0 = featureERC20.connect(sender0);
@@ -93,6 +97,8 @@ beforeEach(async function () {
   contractAsSignerChallenger2 = featureERC20.connect(challenger2);
   contractAsSignerSender7 = featureERC20.connect(sender7);
   contractAsSignerReceiver7 = featureERC20.connect(receiver7);
+  contractAsSignerSender8 = featureERC20.connect(sender8);
+  contractAsSignerReceiver8 = featureERC20.connect(receiver8);
 
   contractAsSignerJuror = arbitrator.connect(deployer);
 
