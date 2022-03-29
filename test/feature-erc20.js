@@ -579,14 +579,14 @@ describe('Feature ERC20', function () {
   it('Should give the amount of the first claimer who claim in multiple successful claims', async function () {
     const createTransferTx = await contractAsSignerERC20Deployer.transfer(
       sender7.address,
-      100,
+      100
     );
 
     await createTransferTx.wait();
 
     const createAllowERC20Tx = await contractAsSender7ERC20Deployer.approve(
       featureERC20.address,
-      100,
+      100
     );
 
     await createAllowERC20Tx.wait();
@@ -599,7 +599,7 @@ describe('Feature ERC20', function () {
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
       '259200', // _challengePeriod => 3 days
-      '', // _metaEvidence
+      '' // _metaEvidence
     );
 
 
@@ -608,8 +608,8 @@ describe('Feature ERC20', function () {
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
-        gasPrice: 150000000000,
-      },
+        gasPrice: 150000000000
+      }
     );
 
     // wait until the transaction is mined
@@ -625,8 +625,8 @@ describe('Feature ERC20', function () {
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
-        gasPrice: 150000000000,
-      },
+        gasPrice: 150000000000
+      }
     );
 
     // wait until the transaction is mined
@@ -638,11 +638,11 @@ describe('Feature ERC20', function () {
 
 
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
-      '10000000000000000000000',
+      '10000000000000000000000'
     )
 
     expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
-      newBalanceReceiver7Expected.toString(),
+      newBalanceReceiver7Expected.toString()
     );
   });
 });
