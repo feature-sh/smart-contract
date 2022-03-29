@@ -19,10 +19,7 @@ let deployer,
   challenger1,
   sender6,
   receiver6,
-  sender7,
-  receiver7,
-  sender8,
-  receiver8;
+  challenger2
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -54,7 +51,6 @@ beforeEach(async function () {
     challenger2,
     sender7,
     receiver7,
-    sender8,
     receiver8
   ] = await ethers.getSigners();
 
@@ -75,7 +71,6 @@ beforeEach(async function () {
   contractAsSender5ERC20Deployer = erc20Mock.connect(sender5);
   contractAsSender6ERC20Deployer = erc20Mock.connect(sender6);
   contractAsSender7ERC20Deployer = erc20Mock.connect(sender7);
-  contractAsSender8ERC20Deployer = erc20Mock.connect(sender8);
 
   contractAsSignerDeployer = featureERC20.connect(deployer);
   contractAsSignerSender0 = featureERC20.connect(sender0);
@@ -97,7 +92,6 @@ beforeEach(async function () {
   contractAsSignerChallenger2 = featureERC20.connect(challenger2);
   contractAsSignerSender7 = featureERC20.connect(sender7);
   contractAsSignerReceiver7 = featureERC20.connect(receiver7);
-  contractAsSignerSender8 = featureERC20.connect(sender8);
   contractAsSignerReceiver8 = featureERC20.connect(receiver8);
 
   contractAsSignerJuror = arbitrator.connect(deployer);
@@ -618,7 +612,7 @@ describe('Feature ERC20', function () {
       .valueOf()
       .mul(150000000000);
 
-
+    // 2nd claim
     const claimTx2 = await contractAsSignerReceiver8.claim(
       0, // _transactionID
       {
@@ -634,10 +628,17 @@ describe('Feature ERC20', function () {
       .valueOf()
       .mul(150000000000);
 
+    await network.provider.send('evm_increaseTime', [259200]);
+    await network.provider.send('evm_mine');
+
+    const payTx = await contractAsSignerDeployer.pay(
+      0, // _claimID
+    );
 
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
       '10000000000000000000000'
     )
+    .sub(gasFeeClaimTx1)
 
     expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
       newBalanceReceiver7Expected.toString()
