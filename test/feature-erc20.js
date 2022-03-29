@@ -591,7 +591,7 @@ describe('Feature ERC20', function () {
 
     await createAllowERC20Tx.wait();
 
-    const createTransactionTx1 = await contractAsSignerSender7.createTransaction(
+    const createTransactionTx = await contractAsSignerSender7.createTransaction(
       arbitrator.address,
       0x00,
       erc20Mock.address,
@@ -601,7 +601,6 @@ describe('Feature ERC20', function () {
       '259200', // _challengePeriod => 3 days
       '' // _metaEvidence
     );
-
 
     // 1st claim
     const claimTx1 = await contractAsSignerReceiver7.claim(
@@ -620,7 +619,6 @@ describe('Feature ERC20', function () {
       .mul(150000000000);
 
 
-    // 2nd claim
     const claimTx2 = await contractAsSignerReceiver8.claim(
       0, // _transactionID
       {
