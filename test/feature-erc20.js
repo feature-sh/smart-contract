@@ -19,7 +19,10 @@ let deployer,
   challenger1,
   sender6,
   receiver6,
-  challenger2
+  challenger2,
+  sender7,
+  receiver7,
+  receiver8;
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -604,10 +607,8 @@ describe('Feature ERC20', function () {
         gasPrice: 150000000000
       }
     );
-
     // wait until the transaction is mined
     const transactionMinedClaimTx1 = await claimTx1.wait();
-
     const gasFeeClaimTx1 = transactionMinedClaimTx1.gasUsed
       .valueOf()
       .mul(150000000000);
@@ -620,17 +621,18 @@ describe('Feature ERC20', function () {
         gasPrice: 150000000000
       }
     );
-
     // wait until the transaction is mined
     const transactionMinedClaimTx2 = await claimTx2.wait();
-
     const gasFeeClaimTx2 = transactionMinedClaimTx2.gasUsed
       .valueOf()
       .mul(150000000000);
 
+
+    // wait until the challenge period is over
     await network.provider.send('evm_increaseTime', [259200]);
     await network.provider.send('evm_mine');
 
+    // Pay the first claimer
     const payTx = await contractAsSignerDeployer.pay(
       0, // _claimID
     );
@@ -638,7 +640,7 @@ describe('Feature ERC20', function () {
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
       '10000000000000000000000'
     )
-    .sub(gasFeeClaimTx1)
+    .sub(gasFeeClaimTx1);
 
     expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
       newBalanceReceiver7Expected.toString()
