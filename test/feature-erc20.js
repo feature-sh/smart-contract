@@ -1,3 +1,4 @@
+const { Provider } = require('@ethersproject/abstract-provider');
 const { expect } = require('chai');
 
 const provider = ethers.provider;
@@ -21,8 +22,7 @@ let deployer,
   receiver6,
   challenger2,
   sender7,
-  receiver7,
-  receiver8;
+  receiver7;
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -54,7 +54,6 @@ beforeEach(async function () {
     challenger2,
     sender7,
     receiver7,
-    receiver8
   ] = await ethers.getSigners();
 
   featureERC20 = await FeatureERC20.deploy();
@@ -79,7 +78,7 @@ beforeEach(async function () {
   contractAsSignerSender0 = featureERC20.connect(sender0);
   contractAsSignerReceiver0 = featureERC20.connect(receiver0);
   contractAsSignerSender1 = featureERC20.connect(sender1);
-  contractAsSignerReceiver1 = featureERC20.connect(receiver1);
+  contractAsSignerReceiver1 = featureERC20.connect(receiver1); 
   contractAsSignerSender2 = featureERC20.connect(sender2);
   contractAsSignerReceiver2 = featureERC20.connect(receiver2);
   contractAsSignerSender3 = featureERC20.connect(sender3);
@@ -95,7 +94,6 @@ beforeEach(async function () {
   contractAsSignerChallenger2 = featureERC20.connect(challenger2);
   contractAsSignerSender7 = featureERC20.connect(sender7);
   contractAsSignerReceiver7 = featureERC20.connect(receiver7);
-  contractAsSignerReceiver8 = featureERC20.connect(receiver8);
 
   contractAsSignerJuror = arbitrator.connect(deployer);
 
@@ -247,7 +245,7 @@ describe('Feature ERC20', function () {
       .valueOf()
       .mul(150000000000);
 
-    const claimTx = await contractAsSignerReceiver2.claim(
+    const claimTx = await contractAsSignerReceiver1.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -295,7 +293,7 @@ describe('Feature ERC20', function () {
       .valueOf()
       .mul(150000000000);
 
-    const claimTx = await contractAsSignerReceiver3.claim(
+    const claimTx = await contractAsSignerReceiver2.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -338,7 +336,7 @@ describe('Feature ERC20', function () {
     );
 
     // Claim
-    const claimTx = await contractAsSignerReceiver4.claim(
+    const claimTx = await contractAsSignerReceiver3.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -420,7 +418,7 @@ describe('Feature ERC20', function () {
     );
 
     // Claim
-    const claimTx = await contractAsSignerReceiver5.claim(
+    const claimTx = await contractAsSignerReceiver4.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -459,14 +457,14 @@ describe('Feature ERC20', function () {
       1, // Ruling for the receiver
     );
 
-    const newBalanceReceiver5Expected = new ethers.BigNumber.from(
+    const newBalanceReceiver4Expected = new ethers.BigNumber.from(
       '10000000000000000000000',
     )
       .sub(gasFeeClaimTx)
       .sub('20000000000000000');
 
-    expect((await provider.getBalance(receiver5.address)).toString()).to.equal(
-      newBalanceReceiver5Expected.toString(),
+    expect((await provider.getBalance(receiver4.address)).toString()).to.equal(
+      newBalanceReceiver4Expected.toString(),
     );
   });
 
@@ -497,7 +495,7 @@ describe('Feature ERC20', function () {
     );
 
     // Claim
-    const claimTx = await contractAsSignerReceiver6.claim(
+    const claimTx = await contractAsSignerReceiver5.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -530,7 +528,7 @@ describe('Feature ERC20', function () {
     );
 
     // Appeal
-    const appealTx = await contractAsSignerReceiver6.appeal(
+    const appealTx = await contractAsSignerReceiver5.appeal(
       0, // _claimID
       {
         value: '20000000000000000', // 0.2eth
@@ -560,15 +558,15 @@ describe('Feature ERC20', function () {
     expect((await contractAsSignerJuror.disputes(0)).status).to.equal(2);
     expect((await contractAsSignerJuror.disputes(0)).ruling).to.equal(1);
 
-    const newBalanceReceiver6Expected = new ethers.BigNumber.from(
+    const newBalanceReceiver5Expected = new ethers.BigNumber.from(
       '10000000000000000000000',
     )
       .sub(gasFeeClaimTx)
       .sub(gasFeeAppealTx)
       .sub('40000000000000000');
 
-    expect((await provider.getBalance(receiver6.address)).toString()).to.equal(
-      newBalanceReceiver6Expected.toString(),
+    expect((await provider.getBalance(receiver5.address)).toString()).to.equal(
+      newBalanceReceiver5Expected.toString(),
     );
   });
 
@@ -600,7 +598,7 @@ describe('Feature ERC20', function () {
     );
 
     // 1st claim
-    const claimTx1 = await contractAsSignerReceiver7.claim(
+    const claimTx1 = await contractAsSignerReceiver6.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -614,7 +612,7 @@ describe('Feature ERC20', function () {
       .mul(150000000000);
 
     // 2nd claim
-    const claimTx2 = await contractAsSignerReceiver8.claim(
+    const claimTx2 = await contractAsSignerReceiver7.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -637,13 +635,13 @@ describe('Feature ERC20', function () {
       0, // _claimID
     );
 
-    const newBalanceReceiver7Expected = new ethers.BigNumber.from(
+    const newBalanceReceiver6Expected = new ethers.BigNumber.from(
       '10000000000000000000000'
     )
     .sub(gasFeeClaimTx1);
 
-    expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
-      newBalanceReceiver7Expected.toString()
+    expect((await provider.getBalance(receiver6.address)).toString()).to.equal(
+      newBalanceReceiver6Expected.toString()
     );
   });
 });
