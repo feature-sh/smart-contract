@@ -1,4 +1,3 @@
-const { Provider } = require('@ethersproject/abstract-provider');
 const { expect } = require('chai');
 
 const provider = ethers.provider;
