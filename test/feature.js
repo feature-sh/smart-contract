@@ -496,6 +496,7 @@ describe('Feature', function () {
         gasPrice: 150000000000
       }
     );
+
     // Wait until the transaction is mined
     const transactionMinedClaimTx1 = await claimTx1.wait();
     const gasFeeClaimTx1 = transactionMinedClaimTx1.gasUsed
@@ -510,6 +511,7 @@ describe('Feature', function () {
         gasPrice: 150000000000
       }
     );
+
     // Wait until the transaction is mined
     const transactionMinedClaimTx2 = await claimTx2.wait();
     const gasFeeClaimTx2 = transactionMinedClaimTx2.gasUsed
@@ -534,7 +536,7 @@ describe('Feature', function () {
       '10000000000000000000000'
     )
     .sub(gasFeeClaimTx2)
-    .sub(ethers.BigNumber.from('120000000000000000'));// Claim value
+    .sub(ethers.BigNumber.from('120000000000000000')); // Claim's value
 
     // First claimer should receive the payment
     expect((await provider.getBalance(receiver6.address)).toString()).to.equal(

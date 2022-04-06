@@ -604,6 +604,7 @@ describe('Feature ERC20', function () {
         gasPrice: 150000000000
       }
     );
+
     // Wait until the transaction is mined
     const transactionMinedClaimTx1 = await claimTx1.wait();
     const gasFeeClaimTx1 = transactionMinedClaimTx1.gasUsed
@@ -618,6 +619,7 @@ describe('Feature ERC20', function () {
         gasPrice: 150000000000
       }
     );
+
     // Wait until the transaction is mined
     const transactionMinedClaimTx2 = await claimTx2.wait();
     const gasFeeClaimTx2 = transactionMinedClaimTx2.gasUsed
