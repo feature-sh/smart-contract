@@ -199,7 +199,7 @@ describe('Feature', function () {
       .valueOf()
       .mul(150000000000);
 
-    const claimTx = await contractAsSignerReceiver2.claim(
+    const claimTx = await contractAsSignerReceiver1.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -237,7 +237,7 @@ describe('Feature', function () {
       .valueOf()
       .mul(150000000000);
 
-    const claimTx = await contractAsSignerReceiver3.claim(
+    const claimTx = await contractAsSignerReceiver2.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -267,7 +267,7 @@ describe('Feature', function () {
     );
 
     // Claim
-    const claimTx = await contractAsSignerReceiver4.claim(
+    const claimTx = await contractAsSignerReceiver3.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -336,7 +336,7 @@ describe('Feature', function () {
     );
 
     // Claim
-    const claimTx = await contractAsSignerReceiver5.claim(
+    const claimTx = await contractAsSignerReceiver4.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -377,14 +377,14 @@ describe('Feature', function () {
       1, // Ruling for the challenger
     );
 
-    const newBalanceReceiver5Expected = new ethers.BigNumber.from(
+    const newBalanceReceiver4Expected = new ethers.BigNumber.from(
       '10000000000000000000000',
     )
       .sub(gasFeeClaimTx)
       .sub('20000000000000000');
 
-    expect((await provider.getBalance(receiver5.address)).toString()).to.equal(
-      newBalanceReceiver5Expected.toString(),
+    expect((await provider.getBalance(receiver4.address)).toString()).to.equal(
+      newBalanceReceiver4Expected.toString(),
     );
   });
 
@@ -402,7 +402,7 @@ describe('Feature', function () {
     );
 
     // Claim
-    const claimTx = await contractAsSignerReceiver6.claim(
+    const claimTx = await contractAsSignerReceiver5.claim(
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
@@ -435,7 +435,7 @@ describe('Feature', function () {
     );
 
     // Appeal
-    const appealTx = await contractAsSignerReceiver6.appeal(
+    const appealTx = await contractAsSignerReceiver5.appeal(
       0, // _claimID
       {
         value: '20000000000000000', // 0.2eth
@@ -465,15 +465,15 @@ describe('Feature', function () {
     expect((await contractAsSignerJuror.disputes(0)).status).to.equal(2);
     expect((await contractAsSignerJuror.disputes(0)).ruling).to.equal(1);
 
-    const newBalanceReceiver6Expected = new ethers.BigNumber.from(
+    const newBalanceReceiver5Expected = new ethers.BigNumber.from(
       '10000000000000000000000',
     )
       .sub(gasFeeClaimTx)
       .sub(gasFeeAppealTx)
       .sub('40000000000000000');
 
-    expect((await provider.getBalance(receiver6.address)).toString()).to.equal(
-      newBalanceReceiver6Expected.toString(),
+    expect((await provider.getBalance(receiver5.address)).toString()).to.equal(
+      newBalanceReceiver5Expected.toString(),
     );
   });
 
@@ -528,13 +528,11 @@ describe('Feature', function () {
     const newBalanceReceiver6Expected = new ethers.BigNumber.from(
       '10000000000000000000000'
     )
-    .sub(ethers.BigNumber.from('100000000000000000'))
     .sub(gasFeeClaimTx1);
 
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
       '10000000000000000000000'
     )
-    .sub(ethers.BigNumber.from('100000000000000000'))
     .sub(gasFeeClaimTx2)
     .sub(ethers.BigNumber.from('120000000000000000'));// Claim value
 
