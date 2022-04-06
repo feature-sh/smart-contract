@@ -52,7 +52,7 @@ beforeEach(async function () {
     receiver6,
     challenger2,
     sender7,
-    receiver7,
+    receiver7
   ] = await ethers.getSigners();
 
   featureERC20 = await FeatureERC20.deploy();
@@ -138,7 +138,7 @@ describe('Feature ERC20', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await claimTx.wait();
 
     expect((await featureERC20.transactions(0)).runningClaimCount).to.equal(1);
@@ -194,7 +194,7 @@ describe('Feature ERC20', function () {
       sender1.address,
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await createTransactionTx.wait();
     const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
       .valueOf()
@@ -238,7 +238,7 @@ describe('Feature ERC20', function () {
       sender2.address,
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await createTransactionTx.wait();
     const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
       .valueOf()
@@ -286,7 +286,7 @@ describe('Feature ERC20', function () {
       sender3.address,
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await createTransactionTx.wait();
     const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
       .valueOf()
@@ -352,7 +352,7 @@ describe('Feature ERC20', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedChallengeClaimTx = await challengeClaimTx.wait();
 
     const gasFeeChallengeClaimTx = transactionMinedChallengeClaimTx.gasUsed
@@ -425,7 +425,7 @@ describe('Feature ERC20', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await claimTx.wait();
 
     const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
@@ -502,7 +502,7 @@ describe('Feature ERC20', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await claimTx.wait();
 
     const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
@@ -538,7 +538,7 @@ describe('Feature ERC20', function () {
     expect((await contractAsSignerJuror.disputes(0)).status).to.equal(1);
     expect((await contractAsSignerJuror.disputes(0)).isAppealed).to.true;
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedAppealTx = await appealTx.wait();
 
     const gasFeeAppealTx = transactionMinedAppealTx.gasUsed
@@ -604,7 +604,7 @@ describe('Feature ERC20', function () {
         gasPrice: 150000000000
       }
     );
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx1 = await claimTx1.wait();
     const gasFeeClaimTx1 = transactionMinedClaimTx1.gasUsed
       .valueOf()
@@ -618,13 +618,13 @@ describe('Feature ERC20', function () {
         gasPrice: 150000000000
       }
     );
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx2 = await claimTx2.wait();
     const gasFeeClaimTx2 = transactionMinedClaimTx2.gasUsed
       .valueOf()
       .mul(150000000000);
 
-    // wait until the challenge period is over
+    // Wait until the challenge period is over
     await network.provider.send('evm_increaseTime', [259200]);
     await network.provider.send('evm_mine');
 
@@ -641,8 +641,8 @@ describe('Feature ERC20', function () {
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
       '10000000000000000000000'
     )
-    .sub(ethers.BigNumber.from('120000000000000000'))
-    .sub(gasFeeClaimTx2);
+    .sub(gasFeeClaimTx2)
+    .sub(ethers.BigNumber.from('120000000000000000')); // Claim value
 
     // First claimer should receive the payment
     expect((await provider.getBalance(receiver6.address)).toString()).to.equal(

@@ -19,7 +19,9 @@ let deployer,
   challenger1,
   sender6,
   receiver6,
-  challenger2;
+  challenger2,
+  sender7,
+  receiver7
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -49,6 +51,8 @@ beforeEach(async function () {
     sender6,
     receiver6,
     challenger2,
+    sender7,
+    receiver7
   ] = await ethers.getSigners();
 
   feature = await Feature.deploy();
@@ -75,6 +79,8 @@ beforeEach(async function () {
   contractAsSignerSender6 = feature.connect(sender6);
   contractAsSignerReceiver6 = feature.connect(receiver6);
   contractAsSignerChallenger2 = feature.connect(challenger2);
+  contractAsSignerSender7 = feature.connect(sender7);
+  contractAsSignerReceiver7 = feature.connect(receiver7);
 
   contractAsSignerJuror = arbitrator.connect(deployer);
 
@@ -106,7 +112,7 @@ describe('Feature', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await claimTx.wait();
 
     expect((await feature.transactions(0)).runningClaimCount).to.equal(1);
@@ -149,7 +155,7 @@ describe('Feature', function () {
 
     expect((await feature.transactions(0)).sender).to.equal(sender1.address);
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await createTransactionTx.wait();
     const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
       .valueOf()
@@ -187,7 +193,7 @@ describe('Feature', function () {
 
     expect((await feature.transactions(0)).sender).to.equal(sender2.address);
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await createTransactionTx.wait();
     const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
       .valueOf()
@@ -225,7 +231,7 @@ describe('Feature', function () {
 
     expect((await feature.transactions(0)).sender).to.equal(sender3.address);
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await createTransactionTx.wait();
     const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
       .valueOf()
@@ -278,7 +284,7 @@ describe('Feature', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedChallengeClaimTx = await challengeClaimTx.wait();
 
     const gasFeeChallengeClaimTx = transactionMinedChallengeClaimTx.gasUsed
@@ -338,7 +344,7 @@ describe('Feature', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await claimTx.wait();
 
     const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
@@ -404,7 +410,7 @@ describe('Feature', function () {
       },
     );
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedClaimTx = await claimTx.wait();
 
     const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
@@ -440,7 +446,7 @@ describe('Feature', function () {
     expect((await contractAsSignerJuror.disputes(0)).status).to.equal(1);
     expect((await contractAsSignerJuror.disputes(0)).isAppealed).to.true;
 
-    // wait until the transaction is mined
+    // Wait until the transaction is mined
     const transactionMinedAppealTx = await appealTx.wait();
 
     const gasFeeAppealTx = transactionMinedAppealTx.gasUsed
@@ -468,6 +474,78 @@ describe('Feature', function () {
 
     expect((await provider.getBalance(receiver6.address)).toString()).to.equal(
       newBalanceReceiver6Expected.toString(),
+    );
+  });
+
+  // Scenario: 2 claimers, the first one get the reward.
+  it('Should give the amount of the first claimer who claim in multiple successful claims', async function () {
+    const createTransactionTx = await contractAsSignerSender7.createTransaction(
+      arbitrator.address,
+      0x00,
+      '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
+      '864000', // _timeoutPayment => 10 days
+      '259200', // _challengePeriod => 3 days
+      '' // _metaEvidence
+    );
+
+    // 1st claim
+    const claimTx1 = await contractAsSignerReceiver6.claim(
+      0, // _transactionID
+      {
+        value: '120000000000000000', // 0.12eth
+        gasPrice: 150000000000
+      }
+    );
+    // Wait until the transaction is mined
+    const transactionMinedClaimTx1 = await claimTx1.wait();
+    const gasFeeClaimTx1 = transactionMinedClaimTx1.gasUsed
+      .valueOf()
+      .mul(150000000000);
+
+    // 2nd claim
+    const claimTx2 = await contractAsSignerReceiver7.claim(
+      0, // _transactionID
+      {
+        value: '120000000000000000', // 0.12eth
+        gasPrice: 150000000000
+      }
+    );
+    // Wait until the transaction is mined
+    const transactionMinedClaimTx2 = await claimTx2.wait();
+    const gasFeeClaimTx2 = transactionMinedClaimTx2.gasUsed
+      .valueOf()
+      .mul(150000000000);
+
+    // Wait until the challenge period is over
+    await network.provider.send('evm_increaseTime', [259200]);
+    await network.provider.send('evm_mine');
+
+    // Pay the first claimer
+    const payTx = await contractAsSignerDeployer.pay(
+      0, // _claimID
+    );
+
+    const newBalanceReceiver6Expected = new ethers.BigNumber.from(
+      '10000000000000000000000'
+    )
+    .sub(ethers.BigNumber.from('100000000000000000'))
+    .sub(gasFeeClaimTx1);
+
+    const newBalanceReceiver7Expected = new ethers.BigNumber.from(
+      '10000000000000000000000'
+    )
+    .sub(ethers.BigNumber.from('100000000000000000'))
+    .sub(gasFeeClaimTx2)
+    .sub(ethers.BigNumber.from('120000000000000000'));// Claim value
+
+    // First claimer should receive the payment
+    expect((await provider.getBalance(receiver6.address)).toString()).to.equal(
+      newBalanceReceiver6Expected.toString()
+    );
+
+    // Second claimer must not receive the payment
+    expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
+      newBalanceReceiver7Expected.toString()
     );
   });
 });
