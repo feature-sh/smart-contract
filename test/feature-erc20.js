@@ -77,7 +77,7 @@ beforeEach(async function () {
   contractAsSignerSender0 = featureERC20.connect(sender0);
   contractAsSignerReceiver0 = featureERC20.connect(receiver0);
   contractAsSignerSender1 = featureERC20.connect(sender1);
-  contractAsSignerReceiver1 = featureERC20.connect(receiver1); 
+  contractAsSignerReceiver1 = featureERC20.connect(receiver1);
   contractAsSignerSender2 = featureERC20.connect(sender2);
   contractAsSignerReceiver2 = featureERC20.connect(receiver2);
   contractAsSignerSender3 = featureERC20.connect(sender3);
@@ -565,7 +565,7 @@ describe('Feature ERC20', function () {
       .sub('40000000000000000');
 
     expect((await provider.getBalance(receiver5.address)).toString()).to.equal(
-      newBalanceReceiver5Expected.toString(),
+      newBalanceReceiver5Expected.toString()
     );
   });
 
@@ -624,7 +624,6 @@ describe('Feature ERC20', function () {
       .valueOf()
       .mul(150000000000);
 
-
     // wait until the challenge period is over
     await network.provider.send('evm_increaseTime', [259200]);
     await network.provider.send('evm_mine');
@@ -639,8 +638,20 @@ describe('Feature ERC20', function () {
     )
     .sub(gasFeeClaimTx1);
 
+    const newBalanceReceiver7Expected = new ethers.BigNumber.from(
+      '10000000000000000000000'
+    )
+    .sub(ethers.BigNumber.from('120000000000000000'))
+    .sub(gasFeeClaimTx2);
+
+    // First claimer should receive the payment
     expect((await provider.getBalance(receiver6.address)).toString()).to.equal(
       newBalanceReceiver6Expected.toString()
+    );
+
+    // Second claimer must not receive the payment
+    expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
+      newBalanceReceiver7Expected.toString()
     );
   });
 });
