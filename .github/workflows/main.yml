@@ -18,6 +18,9 @@ jobs:
           node-version: '16'
       - run: npm install hardhat
 
+      - name: Compile contracts
+        run: npx hardhat compile
+
       - name: Run tests for Feature.sol
         run: npx hardhat test test/feature.js
 
