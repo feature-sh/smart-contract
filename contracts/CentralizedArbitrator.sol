@@ -92,19 +92,16 @@ abstract contract CentralizedArbitrator is Arbitrator {
     }
 
     /** @dev Cost of arbitration. Accessor to arbitrationPrice.
-     *  @param _extraData Not used by this contract.
      *  @return fee Amount to be paid.
      */
-    function arbitrationCost(bytes memory _extraData) public view override returns(uint fee) {
+    function arbitrationCost() public view returns(uint fee) {
         return arbitrationPrice;
     }
 
     /** @dev Cost of appeal. Since it is not possible, it's a high value which can never be paid.
-     *  @param _disputeID ID of the dispute to be appealed. Not used by this contract.
-     *  @param _extraData Not used by this contract.
      *  @return fee Amount to be paid.
      */
-    function appealCost(uint _disputeID, bytes memory _extraData) public pure override returns(uint fee) {
+    function appealCost() public pure returns(uint fee) {
         return NOT_PAYABLE_VALUE;
     }
 
@@ -139,7 +136,7 @@ abstract contract CentralizedArbitrator is Arbitrator {
         dispute.ruling = _ruling;
         dispute.status = DisputeStatus.Solved;
 
-        payable(msg.sender).send(dispute.fee); // Avoid blocking.
+        payable(msg.sender).transfer(dispute.fee); // Avoid blocking.
         dispute.arbitrated.rule(_disputeID,_ruling);
     }
 
