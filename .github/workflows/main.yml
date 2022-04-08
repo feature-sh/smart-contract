@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  push:
+    branches: [ci/add-github-action-workflow-for-tests]
+  pull_request:
+    branches: [ci/add-github-action-workflow-for-tests]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: run tests for Feature.sol
+      - run: npx hardhat test test/feature.js
+      - name: run test for FeatureERC20.sol
+      - run: npx hardhat test test/feature-erc20.js
