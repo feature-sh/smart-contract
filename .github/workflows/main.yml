@@ -18,8 +18,8 @@ jobs:
           node-version: '16'
       - run: npm install hardhat
 
-      - name: run tests for Feature.sol
+      - name: Run tests for Feature.sol
         run: npx hardhat test test/feature.js
 
-      - name: run test for FeatureERC20.sol
+      - name: Run tests for FeatureERC20.sol
         run: npx hardhat test test/feature-erc20.js

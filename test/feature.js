@@ -533,7 +533,7 @@ describe('Feature', function () {
     .sub(gasFeeClaimTx1);
 
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
-      '10000000000000000000000'
+      '100000000000000000000'
     )
     .sub(gasFeeClaimTx2)
     .sub(ethers.BigNumber.from('120000000000000000')); // Claim's value
