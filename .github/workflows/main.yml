@@ -19,6 +19,3 @@ jobs:
 
       - name: Run tests for Feature.sol
         run: npx hardhat test test/feature.js
-
-      - name: Run tests for FeatureERC20.sol
-        run: npx hardhat test test/feature-erc20.js
