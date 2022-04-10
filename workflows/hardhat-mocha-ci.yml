@@ -1,0 +1,24 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test smart contracts
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - run: npm install hardhat
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Run tests for feature.sol
+        run: npx hardhat test test/feature.js
+
+      - name: Run tests for feature-erc20.sol
+      - run: npx hardhat test test/featureERC20.js
