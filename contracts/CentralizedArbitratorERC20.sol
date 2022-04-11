@@ -118,16 +118,14 @@ abstract contract CentralizedArbitratorERC20 is Arbitrator {
      *  @param _extraData Can be used to give additional info on the dispute to be created.
      *  @return disputeID ID of the dispute created.
      */
-    function createDispute(uint256 _choices, IERC20 _token, uint256 _fee, bytes calldata _extraData)
-        public
-        payable
-        returns (uint256 disputeID)
-    {
+    function createDispute(
+        uint256 _choices,
+        IERC20 _token,
+        uint256 _fee,
+        bytes calldata _extraData
+    ) public payable returns (uint256 disputeID) {
         // Transfers token from sender wallet to contract.
-        require(
-            _token.transferFrom(msg.sender, address(this), _fee),
-            "Sender does not have enough approved funds."
-        );
+        require(_token.transferFrom(msg.sender, address(this), _fee), "Sender does not have enough approved funds.");
         super.createDispute(_choices, _extraData);
         disputes.push(
             DisputeStruct({
