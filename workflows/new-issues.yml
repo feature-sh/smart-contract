@@ -1,0 +1,23 @@
+name: Add new issues to GitHub projects beta
+
+on:
+  issues: 
+    types: [opened, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so jobs can access it
+      - uses: actions/checkout@v3
+
+      # Automatically add issues to GitHub projects beta
+      - name: Add To GitHub Projects Beta
+        uses: actions/add-to-project@v0.0.3
+        with:
+          # URL of the project to add issues to
+          project-url: https://github.com/orgs/feature-sh/projects/1
+          # A GitHub personal access token with write access to the project
+          github-token: ${{ secrets.GHPROJECT_TOKEN }}
+          
