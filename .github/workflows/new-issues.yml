@@ -27,5 +27,4 @@ jobs:
           curl --request PATCH \
           --url ${{ github.event.issue.url }} \
           --header 'authorization: token ${{ secrets.GITHUB_TOKEN }}' \
-          --data '{"milestone": 2}'
-          
+          --data '{"milestone": 3}'
