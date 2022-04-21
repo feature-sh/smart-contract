@@ -19,12 +19,19 @@ jobs:
           # URL of the project to add issues to
           project-url: https://github.com/orgs/feature-sh/projects/1
           github-token: ${{ secrets.GHPROJECT_TOKEN }}
-          
-      # TO DO: Find a way to add the lastest milestone without hardcoding it
-      - name: Add milestone to issue
+
+      - name: Add lastest milestone
         # Edit issue data with GitHub's REST API
         run: |
+          milestonesURL="${{ github.event.issue.repository_url }}/milestones" \
+          && \
+          lastMilestoneNumber=$(curl \
+          -H "Accept: application/vnd.github.v3+json" \
+          -u ${{ github.event.issue.user.login }}:${{ secrets.GHPROJECT_TOKEN }} \
+          ${milestonesURL} \
+          | grep '"number": [0-9]' | tail -1 | grep -o "[*0-9]") \
+          && \
           curl --request PATCH \
           --url ${{ github.event.issue.url }} \
-          --header 'authorization: token ${{ secrets.GITHUB_TOKEN }}' \
-          --data '{"milestone": 3}'
+          --header 'authorization: token ${{ secrets.GHPROJECT_TOKEN }}' \
+          --data "{\"milestone\": ${lastMilestoneNumber}}"
