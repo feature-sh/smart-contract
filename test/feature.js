@@ -21,7 +21,7 @@ let deployer,
   receiver6,
   challenger2,
   sender7,
-  receiver7
+  receiver7;
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -52,7 +52,7 @@ beforeEach(async function () {
     receiver6,
     challenger2,
     sender7,
-    receiver7
+    receiver7,
   ] = await ethers.getSigners();
 
   feature = await Feature.deploy();
@@ -485,7 +485,7 @@ describe('Feature', function () {
       '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
       '864000', // _timeoutPayment => 10 days
       '259200', // _challengePeriod => 3 days
-      '' // _metaEvidence
+      '', // _metaEvidence
     );
 
     // 1st claim
@@ -493,8 +493,8 @@ describe('Feature', function () {
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
-        gasPrice: 150000000000
-      }
+        gasPrice: 150000000000,
+      },
     );
 
     // Wait until the transaction is mined
@@ -508,8 +508,8 @@ describe('Feature', function () {
       0, // _transactionID
       {
         value: '120000000000000000', // 0.12eth
-        gasPrice: 150000000000
-      }
+        gasPrice: 150000000000,
+      },
     );
 
     // Wait until the transaction is mined
@@ -528,24 +528,23 @@ describe('Feature', function () {
     );
 
     const newBalanceReceiver6Expected = new ethers.BigNumber.from(
-      '10000000000000000000000'
-    )
-    .sub(gasFeeClaimTx1);
+      '10000000000000000000000',
+    ).sub(gasFeeClaimTx1);
 
     const newBalanceReceiver7Expected = new ethers.BigNumber.from(
-      '10000000000000000000000'
+      '10000000000000000000000',
     )
-    .sub(gasFeeClaimTx2)
-    .sub(ethers.BigNumber.from('120000000000000000')); // Claim's value
+      .sub(gasFeeClaimTx2)
+      .sub(ethers.BigNumber.from('120000000000000000')); // Claim's value
 
     // First claimer should receive the payment
     expect((await provider.getBalance(receiver6.address)).toString()).to.equal(
-      newBalanceReceiver6Expected.toString()
+      newBalanceReceiver6Expected.toString(),
     );
 
     // Second claimer must not receive the payment
     expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
-      newBalanceReceiver7Expected.toString()
+      newBalanceReceiver7Expected.toString(),
     );
   });
 });

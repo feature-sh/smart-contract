@@ -1,0 +1,31 @@
+name: Add new issues to GitHub projects beta with milestone
+
+on:
+  issues: 
+    types: [opened, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so jobs can access it
+      - uses: actions/checkout@v3
+
+      # Automatically add issues to GitHub projects beta
+      - name: Add To GitHub Projects Beta
+        uses: actions/add-to-project@v0.0.3
+        with:
+          # URL of the project to add issues to
+          project-url: https://github.com/orgs/feature-sh/projects/1
+          github-token: ${{ secrets.GHPROJECT_TOKEN }}
+          
+      # TO DO: Find a way to add the lastest milestone without hardcoding it
+      - name: Add milestone to issue
+        # Edit issue data with GitHub's REST API
+        run: |
+          curl --request PATCH \
+          --url ${{ github.event.issue.url }} \
+          --header 'authorization: token ${{ secrets.GITHUB_TOKEN }}' \
+          --data '{"milestone": 2}'
+          
