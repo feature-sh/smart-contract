@@ -17,8 +17,8 @@ jobs:
       - name: Compile contracts
         run: npx hardhat compile
 
-      - name: Run tests for feature.sol
+      - name: Run tests for Feature.sol
         run: npx hardhat test test/feature.js
 
-      - name: Run tests for feature-erc20.sol
-        run: npx hardhat test test/featureERC20.js
+      - name: Run tests for FeatureERC.sol
+        run: npx hardhat test test/feature-erc20.js
