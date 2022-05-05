@@ -1,0 +1,39 @@
+name: Create Sprint milestone every 2 weeks on wednesday
+
+on:
+  schedule:
+    # Run script on every wednesday at midnight
+    - cron: '0 0 * * WED'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get week number
+        # Determine if current week number is odd or even, for running automation every 2 weeks
+        run: echo "ODD_WEEK=$(expr $(date +%U) % 2)" >> $GITHUB_ENV
+        
+      - name: Sprint Milestone Action
+        # Runs on even week numbers (so ODD_WEEK = 0)
+        if: env.ODD_WEEK == 0
+        # 1) Set the due date in 3 weeks (1 week in advance + 2 active weeks)
+        # 2) Get the last sprint number from the one of our repos
+        # 3) Add 1 to the last sprint number
+        # 4) Create the new milestone through GitHub REST API
+        run: |
+          dueDate=$(date -d "3 weeks" +"%Y-%m-%d") \
+          && \
+          lastSprintNumber=$(curl \
+          -H "Accept: application/vnd.github.v3+json" \
+          -u n1c01a5:${{ secrets.GHPROJECT_TOKEN }} \
+          https://api.github.com/repos/feature-sh/app/milestones \
+          | grep "Sprint" | grep -o -E "[0-9]+" | sort -n | tail -1) \
+          && \
+          newSprintNumber=$(expr $lastSprintNumber + 1) \
+          && \
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -u n1c01a5:${{ secrets.GHPROJECT_TOKEN }} \
+          https://api.github.com/repos/$GITHUB_REPOSITORY/milestones \
+          -d '{"title":"Sprint '"${newSprintNumber}"'","state":"open","description":"","due_on":"'"${dueDate}"'T00:00:00Z"}'
