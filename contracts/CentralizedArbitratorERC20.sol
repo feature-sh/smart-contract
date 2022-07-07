@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 
 interface IERC20 {
@@ -83,10 +84,7 @@ abstract contract Arbitrator {
      *  @param _choices Amount of choices the arbitrator can make in this dispute.
      *  @return disputeID ID of the dispute created.
      */
-    function createDispute(uint256 _choices) public virtual requireArbitrationFee returns (uint256 disputeID) {
-        bool transfersucceed = IERC20(arbitrationToken()).transferFrom(msg.sender, address(this), arbitrationCost());
-        require(transfersucceed, "Tokens not transferred");
-    }
+    function createDispute(uint256 _choices) public virtual requireArbitrationFee returns (uint256 disputeID) {}
 
     function arbitrationCost() public view virtual returns (uint256 fee) {}
 
@@ -179,7 +177,7 @@ abstract contract Arbitrable is IArbitrable {
      *  @param _disputeID ID of the dispute in the Arbitrator contract.
      *  @param _ruling Ruling given by the arbitrator. Note that 0 is reserved for "Not able/wanting to make a decision".
      */
-    function rule(uint256 _disputeID, uint256 _ruling) public onlyArbitrator {
+    function rule(uint256 _disputeID, uint256 _ruling) public override onlyArbitrator {
         emit Ruling(Arbitrator(msg.sender), _disputeID, _ruling);
 
         executeRuling(_disputeID, _ruling);
@@ -195,7 +193,7 @@ abstract contract Arbitrable is IArbitrable {
 /** @title Centralized Arbitrator
  *  @dev This is a centralized arbitrator deciding alone on the result of disputes. No appeals are possible.
  */
-contract CentralizedArbitrator is Arbitrator {
+contract CentralizedArbitratorERC20 is Arbitrator {
     address public owner = msg.sender;
     uint256 public arbitrationPrice; // Not public because arbitrationCost already acts as an accessor.
     address public ERC20contract;
@@ -216,7 +214,7 @@ contract CentralizedArbitrator is Arbitrator {
 
     DisputeStruct[] public disputes;
 
-    constructor(uint256 _arbitrationPrice, address _ERC20contract) public {
+    constructor(uint256 _arbitrationPrice, address _ERC20contract) {
         arbitrationPrice = _arbitrationPrice;
         ERC20contract = _ERC20contract;
     }
@@ -251,6 +249,8 @@ contract CentralizedArbitrator is Arbitrator {
                 status: DisputeStatus.Waiting
             })
         ); // Create the dispute and return its number.
+        bool transfersucceed = IERC20(arbitrationToken()).transferFrom(msg.sender, address(this), arbitrationCost());
+        require(transfersucceed, "Tokens not transferred");
         emit DisputeCreation(disputeID, Arbitrable(msg.sender));
         return disputes.length - 1;
     }
