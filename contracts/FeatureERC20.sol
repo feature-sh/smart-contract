@@ -475,6 +475,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
         uint256 transactionID; // Relation one-to-one with the transaction.
         address receiver; // Address of the receiver.
         address challenger; // Address of the challenger.
+        string proof; // Link to the proof.
         uint256 timeoutClaim; // Time of the outdated challenge period.
         uint256 lastInteraction; // Last interaction for the dispute procedure.
         uint256 receiverFee; // Total fees paid by the receiver.
@@ -510,8 +511,9 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
      *  @param _transactionID The index of the transaction.
      *  @param _claimID The index of the claim.
      *  @param _receiver The receiver who claims.
+     *  @param _proof The string of the proof.
      */
-    event ClaimSubmit(uint256 indexed _transactionID, uint256 _claimID, address _receiver);
+    event ClaimSubmit(uint256 indexed _transactionID, uint256 _claimID, address _receiver, string _proof);
 
     /** @dev Indicate that a party has to pay a fee or would otherwise be considered as losing.
      *  @param _transactionID The index of the transaction.
@@ -586,27 +588,30 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
     /** @dev Claim from receiver
      *  @param _transactionID The index of the transaction.
+     *  @param _proof The string of the proof.
      *  @return claimID The index of the claim.
      */
-    function claim(uint256 _transactionID) public payable returns (uint256 claimID) {
-        return _claimFor(_transactionID, _msgSender());
+    function claim(uint256 _transactionID, string memory _proof) public payable returns (uint256 claimID) {
+        return _claimFor(_transactionID, _msgSender(), _proof);
     }
 
     /** @dev Claim from receiver
      *  @param _transactionID The index of the transaction.
      *  @param _receiver The address of the receiver.
+     *  @param _proof The string of the proof.
      *  @return claimID The index of the claim.
      */
-    function claimFor(uint256 _transactionID, address _receiver) public payable returns (uint256 claimID) {
-        return _claimFor(_transactionID, _receiver);
+    function claimFor(uint256 _transactionID, address _receiver, string memory _proof) public payable returns (uint256 claimID) {
+        return _claimFor(_transactionID, _receiver, _proof);
     }
 
     /** @dev Claim from receiver
      *  @param _transactionID The index of the transaction.
      *  @param _receiver The address of the receiver.
+     *  @param _proof The string of the proof.
      *  @return claimID The index of the claim.
      */
-    function _claimFor(uint256 _transactionID, address _receiver) internal returns (uint256 claimID) {
+    function _claimFor(uint256 _transactionID, address _receiver, string memory _proof) internal returns (uint256 claimID) {
         Transaction storage transaction = transactions[_transactionID];
 
         uint256 arbitrationCost = transaction.arbitrator.arbitrationCost(transaction.arbitratorExtraData);
@@ -621,6 +626,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
                 transactionID: _transactionID,
                 receiver: _receiver,
                 challenger: address(0),
+                proof: _proof,
                 timeoutClaim: transaction.delayClaim + block.timestamp,
                 lastInteraction: block.timestamp,
                 receiverFee: arbitrationCost,
@@ -634,7 +640,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
         transaction.runningClaimCount++;
 
-        emit ClaimSubmit(_transactionID, claimID, _receiver);
+        emit ClaimSubmit(_transactionID, claimID, _receiver, _proof);
 
         return claimID;
     }
