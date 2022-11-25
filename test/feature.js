@@ -106,6 +106,7 @@ describe('Feature', function () {
 
     const claimTx = await contractAsSignerReceiver0.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -201,6 +202,7 @@ describe('Feature', function () {
 
     const claimTx = await contractAsSignerReceiver1.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -239,6 +241,7 @@ describe('Feature', function () {
 
     const claimTx = await contractAsSignerReceiver2.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -269,6 +272,7 @@ describe('Feature', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver3.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -338,6 +342,7 @@ describe('Feature', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver4.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -404,6 +409,7 @@ describe('Feature', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver5.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -491,6 +497,7 @@ describe('Feature', function () {
     // 1st claim
     const claimTx1 = await contractAsSignerReceiver6.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -506,6 +513,7 @@ describe('Feature', function () {
     // 2nd claim
     const claimTx2 = await contractAsSignerReceiver7.claim(
       0, // _transactionID
+      'ipfs://QmVVyvsW5pziEzCrNjLvRSgNpbsLYH5drHn7D6AAhjKYzy',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
