@@ -511,9 +511,8 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
      *  @param _transactionID The index of the transaction.
      *  @param _claimID The index of the claim.
      *  @param _receiver The receiver who claims.
-     *  @param _proof The string of the proof.
      */
-    event ClaimSubmit(uint256 indexed _transactionID, uint256 _claimID, address _receiver, string _proof);
+    event ClaimSubmit(uint256 indexed _transactionID, uint256 _claimID, address _receiver);
 
     /** @dev Indicate that a party has to pay a fee or would otherwise be considered as losing.
      *  @param _transactionID The index of the transaction.
@@ -640,7 +639,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
         transaction.runningClaimCount++;
 
-        emit ClaimSubmit(_transactionID, claimID, _receiver, _proof);
+        emit ClaimSubmit(_transactionID, claimID, _receiver);
 
         return claimID;
     }
