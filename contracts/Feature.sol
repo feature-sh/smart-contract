@@ -496,7 +496,6 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
         address challenger; // Address of the challenger.
         string proof; // Link to the proof.
         uint256 timeoutClaim; // Time of the outdated challenge period.
-        uint256 lastInteraction; // Last interaction for the dispute procedure.
         uint256 receiverFee; // Total fees paid by the receiver.
         uint256 challengerFee; // Total fees paid by the challenge.
         uint256 disputeID; // If dispute exists, the ID of the dispute.
@@ -635,7 +634,6 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
                 challenger: address(0),
                 proof: _proof,
                 timeoutClaim: transaction.delayClaim + block.timestamp,
-                lastInteraction: block.timestamp,
                 receiverFee: arbitrationCost,
                 challengerFee: 0,
                 disputeID: 0,
