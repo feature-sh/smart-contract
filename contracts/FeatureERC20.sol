@@ -586,7 +586,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
     /** @dev Claim from receiver
      *  @param _transactionID The index of the transaction.
-     *  @param _proof The string of the proof.
+     *  @param _proof The link to the proof.
      *  @return claimID The index of the claim.
      */
     function claim(uint256 _transactionID, string memory _proof) public payable returns (uint256 claimID) {
@@ -596,7 +596,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
     /** @dev Claim from receiver
      *  @param _transactionID The index of the transaction.
      *  @param _receiver The address of the receiver.
-     *  @param _proof The string of the proof.
+     *  @param _proof The link to the proof.
      *  @return claimID The index of the claim.
      */
     function claimFor(uint256 _transactionID, address _receiver, string memory _proof) public payable returns (uint256 claimID) {
@@ -606,7 +606,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
     /** @dev Claim from receiver
      *  @param _transactionID The index of the transaction.
      *  @param _receiver The address of the receiver.
-     *  @param _proof The string of the proof.
+     *  @param _proof The link to the proof.
      *  @return claimID The index of the claim.
      */
     function _claimFor(uint256 _transactionID, address _receiver, string memory _proof) internal returns (uint256 claimID) {

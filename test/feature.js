@@ -117,7 +117,7 @@ describe('Feature', function () {
     const transactionMinedClaimTx = await claimTx.wait();
     const txID = transactionMinedClaimTx.events[0].args[0].toString();
 
-    // Find the character string 'proof' in the arguments of the claims method
+    // Get the "proof" from the claim.
     const proofExpected = (await contractAsSignerReceiver1.claims(txID))[3];
 
     expect(proofExpected).to.match(/^https:\/\/github.com\//g);
