@@ -143,7 +143,7 @@ describe('Feature ERC20', function () {
     const transactionMinedClaimTx = await claimTx.wait();
     const txID = transactionMinedClaimTx.events[0].args[0].toString();
 
-    // Get the "proof" from the claim.
+    /// Get proof from the claim
     const proofExpected = (await contractAsSignerReceiver1.claims(txID))[3];
 
     expect(proofExpected).to.equal('https://github.com/feature-sh/bot/pull/190');
