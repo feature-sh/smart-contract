@@ -1,8 +1,15 @@
-node_modules
 .env
+
+# Dependency
+node_modules
+
+# Editor
 .vscode
 
-#Hardhat files
+# Random crap
+.DS_Store
+
+# Hardhat files
 cache
 artifacts
 bin

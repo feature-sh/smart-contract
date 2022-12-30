@@ -146,7 +146,7 @@ describe('Feature ERC20', function () {
     // Get the "proof" from the claim.
     const proofExpected = (await contractAsSignerReceiver1.claims(txID))[3];
 
-    expect(proofExpected).to.match(/^https:\/\/github.com\//g);
+    expect(proofExpected).to.equal('https://github.com/feature-sh/bot/pull/190');
     expect((await featureERC20.transactions(0)).runningClaimCount).to.equal(1);
 
     const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
