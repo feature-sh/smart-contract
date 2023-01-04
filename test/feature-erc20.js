@@ -132,6 +132,7 @@ describe('Feature ERC20', function () {
 
     const claimTx = await contractAsSignerReceiver0.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -140,7 +141,12 @@ describe('Feature ERC20', function () {
 
     // Wait until the transaction is mined
     const transactionMinedClaimTx = await claimTx.wait();
+    const txID = transactionMinedClaimTx.events[0].args[0].toString();
 
+    /// Get proof from the claim
+    const proofExpected = (await contractAsSignerReceiver1.claims(txID))[3];
+
+    expect(proofExpected).to.equal('https://github.com/feature-sh/bot/pull/190');
     expect((await featureERC20.transactions(0)).runningClaimCount).to.equal(1);
 
     const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
@@ -195,8 +201,8 @@ describe('Feature ERC20', function () {
     );
 
     // Wait until the transaction is mined
-    const transactionMinedClaimTx = await createTransactionTx.wait();
-    const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
+    const transactionMinedCreateTransactionTx = await createTransactionTx.wait();
+    const gasFeeCreateTransactionTx = transactionMinedCreateTransactionTx.gasUsed
       .valueOf()
       .mul(150000000000);
 
@@ -239,13 +245,14 @@ describe('Feature ERC20', function () {
     );
 
     // Wait until the transaction is mined
-    const transactionMinedClaimTx = await createTransactionTx.wait();
-    const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
+    const transactionMinedCreateTransactionTx = await createTransactionTx.wait();
+    const gasFeeCreateTransactionTx = transactionMinedCreateTransactionTx.gasUsed
       .valueOf()
       .mul(150000000000);
 
     const claimTx = await contractAsSignerReceiver1.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -287,13 +294,14 @@ describe('Feature ERC20', function () {
     );
 
     // Wait until the transaction is mined
-    const transactionMinedClaimTx = await createTransactionTx.wait();
-    const gasFeeCreateTransactionTx = transactionMinedClaimTx.gasUsed
+    const transactionMinedCreateTransactionTx = await createTransactionTx.wait();
+    const gasFeeCreateTransactionTx = transactionMinedCreateTransactionTx.gasUsed
       .valueOf()
       .mul(150000000000);
 
     const claimTx = await contractAsSignerReceiver2.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -337,6 +345,7 @@ describe('Feature ERC20', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver3.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -419,6 +428,7 @@ describe('Feature ERC20', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver4.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -496,6 +506,7 @@ describe('Feature ERC20', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver5.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -599,6 +610,7 @@ describe('Feature ERC20', function () {
     // 1st claim
     const claimTx1 = await contractAsSignerReceiver6.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -614,6 +626,7 @@ describe('Feature ERC20', function () {
     // 2nd claim
     const claimTx2 = await contractAsSignerReceiver7.claim(
       0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/190',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
