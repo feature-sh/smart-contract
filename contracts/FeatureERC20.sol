@@ -5,7 +5,7 @@
  *  @reviewers: []
  *  @auditors: []
  *  @bounties: []
- *  @deployments: []
+ *  @deployments: [gnosischain: 0x62B286a93D6F720A654745A3451f71cF71481b81, polygon: 0xdc27c616f64C82cAeE26667074b40452F8E2699c, arbitrum one: 0xeb3E701E79238C120171d5F732ed4c1e46a49D7e, goerli: 0xFa024d59d414E7e0f34B3d9Ec9e4697798A95Fc5, mumbai: 0x2363E604d6821407b0865e78cf1979FBb46F3254]
  */
 
 pragma solidity ^0.8.7;
