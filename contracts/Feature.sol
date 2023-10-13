@@ -719,7 +719,8 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
      */
     function raiseDispute(uint256 _claimID, uint256 _arbitrationCost) internal {
         Claim storage claim = claims[_claimID];
-        Transaction storage transaction = transactions[claim.transactionID];
+        uint256 transactionID = claim.transactionID;
+        Transaction storage transaction = transactions[transactionID];
 
         claim.status = Status.DisputeCreated;
         claim.disputeID = transaction.arbitrator.createDispute{value: _arbitrationCost}(
@@ -728,7 +729,7 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
         );
         disputeIDtoClaimID[claim.disputeID] = _claimID;
 
-        emit Dispute(transaction.arbitrator, claim.disputeID, _claimID, _claimID);
+        emit Dispute(transaction.arbitrator, claim.disputeID, transactionID, _claimID);
 
         // Refund receiver if it overpaid.
         if (claim.receiverFee > _arbitrationCost) {
