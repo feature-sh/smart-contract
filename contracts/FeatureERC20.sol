@@ -81,12 +81,12 @@ contract EIP712Base is Initializable {
         bytes32 salt;
     }
 
-    bytes32 internal constant EIP712_DOMAIN_TYPEHASH =
+    bytes32 internal immutable EIP712_DOMAIN_TYPEHASH =
         keccak256(bytes("EIP712Domain(string name,string version,address verifyingContract,bytes32 salt)"));
     bytes32 internal domainSeperator;
 
     // supposed to be called once while initializing.
-    // one of the contractsa that inherits this contract follows proxy pattern
+    // one of the contracts that inherits this contract follows proxy pattern
     // so it is not possible to do this in a constructor
     function _initializeEIP712(string memory name, string memory version) internal initializer {
         _setDomainSeperator(name, version);
@@ -129,7 +129,7 @@ contract EIP712Base is Initializable {
 }
 
 contract NativeMetaTransaction is EIP712Base {
-    bytes32 private constant META_TRANSACTION_TYPEHASH =
+    bytes32 private immutable META_TRANSACTION_TYPEHASH =
         keccak256(bytes("MetaTransaction(uint256 nonce,address from,bytes functionSignature)"));
 
     event MetaTransactionExecuted(address userAddress, address relayerAddress, bytes functionSignature);
@@ -179,7 +179,7 @@ contract NativeMetaTransaction is EIP712Base {
         return returnData;
     }
 
-    function hashMetaTransaction(MetaTransaction memory metaTx) internal pure returns (bytes32) {
+    function hashMetaTransaction(MetaTransaction memory metaTx) internal view returns (bytes32) {
         return
             keccak256(
                 abi.encode(META_TRANSACTION_TYPEHASH, metaTx.nonce, metaTx.from, keccak256(metaTx.functionSignature))
@@ -238,13 +238,13 @@ abstract contract ContextMixin {
  *      -Create the event Dispute(_arbitrator,_disputeID,_rulingOptions);
  */
 interface IArbitrable {
-    /** @dev To be emmited when meta-evidence is submitted.
+    /** @dev To be emited when meta-evidence is submitted.
      *  @param _metaEvidenceID Unique identifier of meta-evidence.
      *  @param _evidence A link to the meta-evidence JSON.
      */
     event MetaEvidence(uint256 indexed _metaEvidenceID, string _evidence);
 
-    /** @dev To be emmited when a dispute is created to link the correct meta-evidence to the disputeID
+    /** @dev To be emited when a dispute is created to link the correct meta-evidence to the disputeID
      *  @param _arbitrator The arbitrator of the contract.
      *  @param _disputeID ID of the dispute in the Arbitrator contract.
      *  @param _metaEvidenceID Unique identifier of meta-evidence.
@@ -257,10 +257,10 @@ interface IArbitrable {
         uint256 _evidenceGroupID
     );
 
-    /** @dev To be raised when evidence are submitted. Should point to the ressource (evidences are not to be stored on chain due to gas considerations).
+    /** @dev To be raised when evidence is submitted. Should point to the resource (evidences are not to be stored on chain due to gas considerations).
      *  @param _arbitrator The arbitrator of the contract.
      *  @param _evidenceGroupID Unique identifier of the evidence group the evidence belongs to.
-     *  @param _party The address of the party submiting the evidence. Note that 0x0 refers to evidence not submitted by any party.
+     *  @param _party The address of the party submitting the evidence. Note that 0x0 refers to evidence not submitted by any party.
      *  @param _evidence A URI to the evidence JSON file whose name should be its keccak256 hash followed by .json.
      */
     event Evidence(
@@ -295,7 +295,7 @@ interface IArbitrable {
  */
 abstract contract Arbitrable is IArbitrable {
     Arbitrator public arbitrator;
-    bytes public arbitratorExtraData; // Extra data to require particular dispute and appeal behaviour.
+    bytes public arbitratorExtraData; // Extra data to require particular dispute and appeal behavior.
 
     modifier onlyArbitrator() {
         require(msg.sender == address(arbitrator), "Can only be called by the arbitrator.");
@@ -401,7 +401,7 @@ abstract contract Arbitrator {
         emit AppealDecision(_disputeID, Arbitrable(msg.sender));
     }
 
-    /** @dev Compute the cost of appeal. It is recommended not to increase it often, as it can be higly time and gas consuming for the arbitrated contracts to cope with fee augmentation.
+    /** @dev Compute the cost of appeal. It is recommended not to increase it often, as it can be highly time and gas consuming for the arbitrated contracts to cope with fee augmentation.
      *  @param _disputeID ID of the dispute to be appealed.
      *  @param _extraData Can be used to give additional info on the dispute to be created.
      *  @return fee Amount to be paid.
@@ -651,7 +651,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
         require(transaction.isExecuted == false, "The transaction should not be executed.");
         require(claim.timeoutClaim <= block.timestamp, "The timeout claim should be passed.");
-        require(claim.status == Status.WaitingForChallenger, "The transaction shouldn't be disputed.");
+        require(claim.status == Status.WaitingForChallenger, "The transaction should not be disputed.");
 
         transaction.isExecuted = true;
         claim.status = Status.Resolved;
@@ -786,7 +786,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
     /** @dev Execute a ruling of a dispute. It reimburses the fee to the winning party.
      *  @param _claimID The index of the transaction.
-     *  @param _ruling Ruling given by the arbitrator. 1 : Pay the receiver with the deposit of paries. 2 : Give the deposit of parties to the challenger.
+     *  @param _ruling Ruling given by the arbitrator. 1 : Pay the receiver with the deposit of parties. 2 : Give the deposit of parties to the challenger.
      */
     function executeRuling(uint256 _claimID, uint256 _ruling) internal {
         Claim storage claim = claims[_claimID];
@@ -831,18 +831,26 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
      *  @return transactionIDs The transaction IDs.
      */
     function getTransactionIDsByAddress(address _address) public view returns (uint256[] memory transactionIDs) {
-        uint256 count = 0;
+        uint256 count;
 
-        for (uint256 i = 0; i < transactions.length; i++) {
+        for (uint256 i; i < transactions.length;) {
             if (transactions[i].sender == _address) count++;
+
+            unchecked {
+                ++i;
+            }
         }
 
         transactionIDs = new uint256[](count);
 
         count = 0;
 
-        for (uint256 j = 0; j < transactions.length; j++) {
+        for (uint256 j; j < transactions.length;) {
             if (transactions[j].sender == _address) transactionIDs[count++] = j;
+
+            unchecked {
+                ++j;
+            }
         }
     }
 
@@ -853,18 +861,26 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
      *  @return claimIDs The claims IDs.
      */
     function getClaimIDsByAddress(address _address) public view returns (uint256[] memory claimIDs) {
-        uint256 count = 0;
+        uint256 count;
 
-        for (uint256 i = 0; i < claims.length; i++) {
+        for (uint256 i; i < claims.length;) {
             if (claims[i].receiver == _address) count++;
+
+            unchecked {
+                ++i;
+            }
         }
 
         claimIDs = new uint256[](count);
 
         count = 0;
 
-        for (uint256 j = 0; j < claims.length; j++) {
+        for (uint256 j = 0; j < claims.length;) {
             if (claims[j].receiver == _address) claimIDs[count++] = j;
+
+            unchecked {
+                ++j;
+            }
         }
     }
 }
