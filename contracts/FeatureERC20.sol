@@ -238,13 +238,13 @@ abstract contract ContextMixin {
  *      -Create the event Dispute(_arbitrator,_disputeID,_rulingOptions);
  */
 interface IArbitrable {
-    /** @dev To be emited when meta-evidence is submitted.
+    /** @dev To be emitted when meta-evidence is submitted.
      *  @param _metaEvidenceID Unique identifier of meta-evidence.
      *  @param _evidence A link to the meta-evidence JSON.
      */
     event MetaEvidence(uint256 indexed _metaEvidenceID, string _evidence);
 
-    /** @dev To be emited when a dispute is created to link the correct meta-evidence to the disputeID
+    /** @dev To be emitted when a dispute is created to link the correct meta-evidence to the disputeID
      *  @param _arbitrator The arbitrator of the contract.
      *  @param _disputeID ID of the dispute in the Arbitrator contract.
      *  @param _metaEvidenceID Unique identifier of meta-evidence.
