@@ -805,7 +805,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
 
             claim.status = Status.Resolved;
         } else {
-            payable(claim.challenger).send(claim.challengerFee + transaction.deposit);
+            payable(claim.challenger).send(transaction.deposit);
 
             claim.status = Status.WaitingForChallenger;
         }

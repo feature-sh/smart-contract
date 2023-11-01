@@ -21,7 +21,10 @@ let deployer,
   receiver6,
   challenger2,
   sender7,
-  receiver7;
+  receiver7,
+  sender8,
+  receiver8,
+  challenger3;
 let contractAsSignerDeployer, contractAsSignerSender0;
 
 beforeEach(async function () {
@@ -53,6 +56,9 @@ beforeEach(async function () {
     challenger2,
     sender7,
     receiver7,
+    sender8,
+    receiver8,
+    challenger3,
   ] = await ethers.getSigners();
 
   featureERC20 = await FeatureERC20.deploy();
@@ -72,6 +78,7 @@ beforeEach(async function () {
   contractAsSender5ERC20Deployer = erc20Mock.connect(sender5);
   contractAsSender6ERC20Deployer = erc20Mock.connect(sender6);
   contractAsSender7ERC20Deployer = erc20Mock.connect(sender7);
+  contractAsSender8ERC20Deployer = erc20Mock.connect(sender8);
 
   contractAsSignerDeployer = featureERC20.connect(deployer);
   contractAsSignerSender0 = featureERC20.connect(sender0);
@@ -93,6 +100,9 @@ beforeEach(async function () {
   contractAsSignerChallenger2 = featureERC20.connect(challenger2);
   contractAsSignerSender7 = featureERC20.connect(sender7);
   contractAsSignerReceiver7 = featureERC20.connect(receiver7);
+  contractAsSignerSender8 = featureERC20.connect(sender8);
+  contractAsSignerReceiver8 = featureERC20.connect(receiver8);
+  contractAsSignerChallenger3 = featureERC20.connect(challenger3);
 
   contractAsSignerJuror = arbitrator.connect(deployer);
 
@@ -132,7 +142,7 @@ describe('Feature ERC20', function () {
 
     const claimTx = await contractAsSignerReceiver0.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -146,7 +156,7 @@ describe('Feature ERC20', function () {
     /// Get proof from the claim
     const proofExpected = (await contractAsSignerReceiver1.claims(txID))[3];
 
-    expect(proofExpected).to.equal('https://github.com/feature-sh/bot/pull/190');
+    expect(proofExpected).to.equal('https://github.com/feature-sh/bot/pull/42');
     expect((await featureERC20.transactions(0)).runningClaimCount).to.equal(1);
 
     const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
@@ -201,10 +211,10 @@ describe('Feature ERC20', function () {
     );
 
     // Wait until the transaction is mined
-    const transactionMinedCreateTransactionTx = await createTransactionTx.wait();
-    const gasFeeCreateTransactionTx = transactionMinedCreateTransactionTx.gasUsed
-      .valueOf()
-      .mul(150000000000);
+    const transactionMinedCreateTransactionTx =
+      await createTransactionTx.wait();
+    const gasFeeCreateTransactionTx =
+      transactionMinedCreateTransactionTx.gasUsed.valueOf().mul(150000000000);
 
     await network.provider.send('evm_increaseTime', [864000]);
     await network.provider.send('evm_mine');
@@ -245,14 +255,14 @@ describe('Feature ERC20', function () {
     );
 
     // Wait until the transaction is mined
-    const transactionMinedCreateTransactionTx = await createTransactionTx.wait();
-    const gasFeeCreateTransactionTx = transactionMinedCreateTransactionTx.gasUsed
-      .valueOf()
-      .mul(150000000000);
+    const transactionMinedCreateTransactionTx =
+      await createTransactionTx.wait();
+    const gasFeeCreateTransactionTx =
+      transactionMinedCreateTransactionTx.gasUsed.valueOf().mul(150000000000);
 
     const claimTx = await contractAsSignerReceiver1.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -294,14 +304,14 @@ describe('Feature ERC20', function () {
     );
 
     // Wait until the transaction is mined
-    const transactionMinedCreateTransactionTx = await createTransactionTx.wait();
-    const gasFeeCreateTransactionTx = transactionMinedCreateTransactionTx.gasUsed
-      .valueOf()
-      .mul(150000000000);
+    const transactionMinedCreateTransactionTx =
+      await createTransactionTx.wait();
+    const gasFeeCreateTransactionTx =
+      transactionMinedCreateTransactionTx.gasUsed.valueOf().mul(150000000000);
 
     const claimTx = await contractAsSignerReceiver2.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -345,7 +355,7 @@ describe('Feature ERC20', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver3.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -428,7 +438,7 @@ describe('Feature ERC20', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver4.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -506,7 +516,7 @@ describe('Feature ERC20', function () {
     // Claim
     const claimTx = await contractAsSignerReceiver5.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -610,7 +620,7 @@ describe('Feature ERC20', function () {
     // 1st claim
     const claimTx1 = await contractAsSignerReceiver6.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -626,7 +636,7 @@ describe('Feature ERC20', function () {
     // 2nd claim
     const claimTx2 = await contractAsSignerReceiver7.claim(
       0, // _transactionID
-      'https://github.com/feature-sh/bot/pull/190',
+      'https://github.com/feature-sh/bot/pull/42',
       {
         value: '120000000000000000', // 0.12eth
         gasPrice: 150000000000,
@@ -667,5 +677,133 @@ describe('Feature ERC20', function () {
     expect((await provider.getBalance(receiver7.address)).toString()).to.equal(
       newBalanceReceiver7Expected.toString(),
     );
+  });
+
+  it('Should refund the challenger deposit to the challenger and pay the claimant after a no ruling and timeout payment', async function () {
+    // Get balance of the contractAsSignerSender8
+    const contractAsSignerSender8Balance = await provider.getBalance(
+      contractAsSignerSender8.address,
+    );
+
+    // Expected balance is 0
+    expect(contractAsSignerSender8Balance.toString()).to.equal('0');
+
+    const createTransferTx = await contractAsSignerERC20Deployer.transfer(
+      sender8.address,
+      100,
+    );
+
+    const createAllowERC20Tx = await contractAsSender8ERC20Deployer.approve(
+      featureERC20.address,
+      100,
+    );
+
+    const createTransactionTx = await contractAsSignerSender8.createTransaction(
+      arbitrator.address,
+      0x00,
+      erc20Mock.address,
+      100,
+      '100000000000000000', // _deposit for claim : 0.1eth => 10% of amount
+      '864000', // _timeoutPayment => 10 days
+      '259200', // _challengePeriod => 3 days
+      '', // _metaEvidence
+    );
+
+    expect((await featureERC20.transactions(0)).sender).to.equal(
+      sender8.address,
+    );
+
+    // Claim
+    const claimTx = await contractAsSignerReceiver8.claim(
+      0, // _transactionID
+      'https://github.com/feature-sh/bot/pull/42',
+      {
+        value: '120000000000000000', // 0.12eth
+        gasPrice: 150000000000,
+      },
+    );
+
+    // Wait until the transaction is mined
+    const transactionMinedClaimTx = await claimTx.wait();
+    const txID = transactionMinedClaimTx.events[0].args[0].toString();
+
+    const gasFeeClaimTx = transactionMinedClaimTx.gasUsed
+      .valueOf()
+      .mul(150000000000);
+
+    // Challenge claim
+    const challengeClaimTx = await contractAsSignerChallenger3.challengeClaim(
+      0, // _claimID
+      {
+        value: '120000000000000000', // 0.12eth
+        gasPrice: 150000000000,
+      },
+    );
+
+    // Wait until the transaction is mined
+    const transactionMinedChallengeClaimTx = await challengeClaimTx.wait();
+
+    const gasFeeChallengeClaimTx = transactionMinedChallengeClaimTx.gasUsed
+      .valueOf()
+      .mul(150000000000);
+
+    // Give ruling
+    await contractAsSignerJuror.giveRuling(
+      0, // _disputeID
+      0, // No ruling
+    );
+
+    await network.provider.send('evm_increaseTime', [42]);
+    await network.provider.send('evm_mine');
+
+    // Execute ruling
+    await contractAsSignerJuror.giveRuling(
+      0, // _disputeID
+      0, // No ruling
+    );
+
+    const claim = await featureERC20.claims(0);
+
+    // Claim status switch to WaitingForChallenger.
+    expect(parseInt(claim.status)).to.equal(0);
+
+    const newBalanceChallenger3Expected = new ethers.BigNumber.from(
+      '10000000000000000000000',
+    )
+      .sub('20000000000000000') // Challenger arbitration fee
+      .sub(gasFeeChallengeClaimTx);
+
+    expect(
+      (await provider.getBalance(challenger3.address)).toString(),
+    ).to.equal(newBalanceChallenger3Expected.toString());
+
+    // Wait until the challenge period is over
+    await network.provider.send('evm_increaseTime', [259200]);
+    await network.provider.send('evm_mine');
+
+    // Pay the first claimer
+    const payTx = await contractAsSignerDeployer.pay(
+      0, // _claimID
+    );
+
+    const newBalanceReceiver8Expected = new ethers.BigNumber.from(
+      '10000000000000000000000',
+    ).sub(gasFeeClaimTx);
+
+    expect((await provider.getBalance(receiver8.address)).toString()).to.equal(
+      newBalanceReceiver8Expected.toString(),
+    );
+
+    // Check ERC20 balance of the receiver
+    expect((await erc20Mock.balanceOf(receiver8.address)).toString()).to.equal(
+      '100',
+    );
+
+    // Get balance of the contractAsSignerSender8 after the payment
+    const contractAsSignerSender8BalanceAfterPayment =
+      await provider.getBalance(contractAsSignerSender8.address);
+
+    // Expected balance is 0 after the payment
+    expect(contractAsSignerSender8BalanceAfterPayment.toString()).to.equal('0');
   });
 });

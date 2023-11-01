@@ -52,6 +52,11 @@ module.exports = {
           gasPrice: 8000000000,
         },
       }),
+    hardhat: {
+      accounts: {
+        count: 60, // Number of unlocked accounts
+      },
+    },
   },
   etherscan: {
     apiKey: ETHERSCAN_API_KEY,

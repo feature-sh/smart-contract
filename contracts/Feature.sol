@@ -812,7 +812,7 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
 
             claim.status = Status.Resolved;
         } else {
-            payable(claim.challenger).send(claim.challengerFee + transaction.deposit);
+            payable(claim.challenger).send(transaction.deposit);
 
             claim.status = Status.WaitingForChallenger;
         }
