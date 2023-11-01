@@ -478,6 +478,7 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
     }
 
     struct Transaction {
+        bool isExecuted;
         address sender;
         Arbitrator arbitrator; // The arbitrator of the contract.
         bytes arbitratorExtraData; // Extra data for the arbitrator.
@@ -487,7 +488,6 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
         uint256 delayClaim; // Time of the challenge period.
         string metaEvidence; // Link to the meta-evidence.
         uint256 runningClaimCount; // Count of running claims.
-        bool isExecuted;
     }
 
     struct Claim {
