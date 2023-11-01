@@ -659,7 +659,7 @@ contract Feature is Initializable, NativeMetaTransaction, ChainConstants, Contex
 
         require(transaction.isExecuted == false, "The transaction should not be executed.");
         require(claim.timeoutClaim <= block.timestamp, "The timeout claim should be passed.");
-        require(claim.status == Status.WaitingForChallenger, "The transaction shouldn't be disputed.");
+        require(claim.status == Status.WaitingForChallenger, "The transaction should not be disputed.");
 
         transaction.isExecuted = true;
         claim.status = Status.Resolved;
