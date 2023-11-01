@@ -178,9 +178,9 @@ contract CentralizedAppealableArbitrator is Arbitrator {
 
     struct DisputeStruct {
         IArbitrable arbitrated;
+        bool isAppealed;
         uint256 choices;
         uint256 fee;
-        bool isAppealed;
         uint256 rulingAppealTimeOut;
         uint256 ruling;
         DisputeStatus status;
