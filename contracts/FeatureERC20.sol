@@ -458,6 +458,7 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
     }
 
     struct Transaction {
+        bool isExecuted;
         address sender;
         Arbitrator arbitrator; // The arbitrator of the contract.
         bytes arbitratorExtraData; // Extra data for the arbitrator.
@@ -468,7 +469,6 @@ contract FeatureERC20 is Initializable, NativeMetaTransaction, ChainConstants, C
         uint256 delayClaim; // Time of the challenge period.
         string metaEvidence; // Link to the meta-evidence.
         uint256 runningClaimCount; // Count of running claims.
-        bool isExecuted;
     }
 
     struct Claim {

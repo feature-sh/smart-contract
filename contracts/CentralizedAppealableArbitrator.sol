@@ -177,12 +177,12 @@ contract CentralizedAppealableArbitrator is Arbitrator {
     uint256 public rulingTime;
 
     struct DisputeStruct {
-        IArbitrable arbitrated;
         uint256 choices;
         uint256 fee;
-        bool isAppealed;
         uint256 rulingAppealTimeOut;
         uint256 ruling;
+        IArbitrable arbitrated;
+        bool isAppealed;
         DisputeStatus status;
     }
 
